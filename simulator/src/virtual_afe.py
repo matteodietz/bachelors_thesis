@@ -97,7 +97,7 @@ if __name__ == '__main__':
     print(f"\nSUCCESS: Got baseline data (M={baseline_decimation}) with shape: {baseline_data.shape}")
     print(f"SUCCESS: Got test data (M={test_decimation}) with shape: {test_data.shape}")
 
-    # Visual Verification...
+    # Visual Verification
     channel_to_plot = 64
     
     freqs_baseline, psd_baseline = signal.welch(baseline_data[:, channel_to_plot], fs=fs_baseline, nperseg=1024)
