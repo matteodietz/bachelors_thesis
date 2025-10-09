@@ -3,8 +3,8 @@ from scipy import signal
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-# Assuming afe_interface.py has the function:
-# def load_picmus_data(iq_path, scan_path): ...
+# Load picmus dataset from afe_interface
+# load_picmus_data(iq_path, scan_path): ...
 from afe_interface import load_picmus_data
 
 class VirtualAFE:
@@ -12,7 +12,7 @@ class VirtualAFE:
     A class that simulates the entire AFE pipeline.
     ...
     """
-    # The __init__ method should take the paths as required arguments
+    # __init__ method takes the paths as required arguments
     def __init__(self, iq_path, scan_path, adc_sample_rate=125e6):
         """
         Initializes the Virtual AFE by loading and preparing a specific dataset.
@@ -42,7 +42,7 @@ class VirtualAFE:
             upsample_factor_num = int(self.fs_adc)
             upsample_factor_den = int(self._fs_picmus)
             
-            # Upsample to create the internal high-rate signal
+            # Upsample to create the internal high-rate signal (125MHz)
             self._high_rate_data = signal.resample_poly(data_for_one_angle, up=upsample_factor_num, down=upsample_factor_den, axis=0)
             
             print(f"Virtual AFE Initialized. Internal data shape: {self._high_rate_data.shape}, fs: {self.fs_adc/1e6:.2f} MHz")
@@ -61,7 +61,7 @@ class VirtualAFE:
         decimated_iq = signal.decimate(self._high_rate_data, q=decimation_factor, axis=0)
         return decimated_iq
 
-# --- This block now serves as a simple and clean UNIT TEST ---
+# -- UNIT TEST ---
 if __name__ == '__main__':
     print("--- Running unit test for virtual_afe.py ---")
 
@@ -71,23 +71,24 @@ if __name__ == '__main__':
     except NameError:
         SIMULATOR_ROOT = Path.cwd().parent
     
-    iq_path = "../datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
-    scan_path = "../datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
+    iq_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
+    scan_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
     print("Paths loaded successfully")
 
-    # Create an instance of the VirtualAFE, passing the paths
+    # Create instance of the VirtualAFE, passing the paths
     try:
-        # The adc_sample_rate is a keyword argument, so it's fine
+        # The adc_sample_rate is a keyword argument, no need to pass it
         afe = VirtualAFE(iq_path=iq_path, scan_path=scan_path)
     except Exception as e:
-        # Now we can print the actual error for better debugging
+        # Print error for debugging purpose
         print(f"Unit test failed during initialization. The error was: {e}")
         exit()
 
-    # The rest of the test script remains the same...
+    # Decimation factor definitions
     baseline_decimation = 4
     test_decimation = 5
     
+    # Get baseline (M=4) and decimated data
     baseline_data = afe.get_decimated_data(decimation_factor=baseline_decimation)
     test_data = afe.get_decimated_data(decimation_factor=test_decimation)
     

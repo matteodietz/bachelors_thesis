@@ -1,5 +1,6 @@
 import h5py
 import numpy as np
+from pathlib import Path
 
 def load_picmus_data(iq_path="../datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5", scan_path="../datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"):
     """
@@ -27,12 +28,35 @@ def load_picmus_data(iq_path="../datasets/experiments/contrast_speckle/contrast_
 
 
 # Making the file runnable for testing resp. finding errors
-# if __name__ == '__main__':
-#     print("--- Running afe_interface.py as a script for testing ---")
-#     try:
-#         # Call the function to actually run the code
-#         simulate_afe_interface()
-#         print("\nSUCCESS: Script completed without errors.")
-#     except Exception as e:
-#         # This will catch any error and print
-#         print(f"\nERROR: The script failed with an exception: {e}")
+if __name__ == '__main__':
+    print("--- Running afe_interface.py as a script for testing ---")
+    
+    # Use pathlib to make the paths robust
+    try:
+        SIMULATOR_ROOT = Path(__file__).parent.parent
+    except NameError:
+        SIMULATOR_ROOT = Path.cwd().parent
+        
+    # Define the default paths for the test
+    iq_path_default = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
+    scan_path_default = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
+
+    try:
+        # Call the function and capture all outputs
+        (iq_data, angles, probe_geometry, sound_speed, sampling_frequency, 
+         modulation_frequency, initial_time, x_axis, z_axis) = load_picmus_data(iq_path_default, scan_path_default)
+        
+        print("\nSUCCESS: Script completed without errors.")
+        
+        # Print the angles that were used in Acquisition
+        print("\n--- Dataset Information ---")
+        print(f"Number of plane wave angles: {len(angles)}")
+        print("Sequence of angles transmitted (in degrees):")
+        
+        # Convert from radians to degrees and print in a nice format
+        angles_degrees = np.rad2deg(angles)
+        print(np.array2string(angles_degrees, precision=2, separator=', '))
+        
+    except Exception as e:
+        # Print error for debugging purpose
+        print(f"\nERROR: The script failed with an exception: {e}")
