@@ -27,7 +27,7 @@ def load_picmus_data(iq_path="../datasets/experiments/contrast_speckle/contrast_
     return iq_data, angles, probe_geometry, sound_speed, sampling_frequency, modulation_frequency, initial_time, x_axis, z_axis
 
 
-# Making the file runnable for testing resp. finding errors
+# --- UNIT TEST ---
 if __name__ == '__main__':
     print("--- Running afe_interface.py as a script for testing ---")
     

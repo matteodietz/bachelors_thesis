@@ -61,7 +61,7 @@ class VirtualAFE:
         decimated_iq = signal.decimate(self._high_rate_data, q=decimation_factor, axis=0)
         return decimated_iq
 
-# -- UNIT TEST ---
+# --- UNIT TEST ---
 if __name__ == '__main__':
     print("--- Running unit test for virtual_afe.py ---")
 
@@ -97,6 +97,7 @@ if __name__ == '__main__':
     
     print(f"\nSUCCESS: Got baseline data (M={baseline_decimation}) with shape: {baseline_data.shape}")
     print(f"SUCCESS: Got test data (M={test_decimation}) with shape: {test_data.shape}")
+    print(f"SUCCESS: Achieved a compression ratio of {(1 - test_data.shape[0] / baseline_data.shape[0]) * 100}%")
 
     # Visual Verification
     channel_to_plot = 64
