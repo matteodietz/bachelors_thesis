@@ -57,7 +57,7 @@ class VirtualAFE:
         if decimation_factor <= 1:
             return self._high_rate_data.copy()
         
-        # Use scipy's decimate function
+        # Use scipy decimate function
         decimated_iq = signal.decimate(self._high_rate_data, q=decimation_factor, axis=0)
         return decimated_iq
 

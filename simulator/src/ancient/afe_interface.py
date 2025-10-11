@@ -24,10 +24,12 @@ def load_picmus_data(iq_path="../datasets/experiments/contrast_speckle/contrast_
         x_axis = f["/US/US_DATASET0000/x_axis"][:]
         z_axis = f["/US/US_DATASET0000/z_axis"][:]
 
+    print(f"Picmus dataset loaded successfully")
+
     return iq_data, angles, probe_geometry, sound_speed, sampling_frequency, modulation_frequency, initial_time, x_axis, z_axis
 
 
-# --- UNIT TEST ---
+# --- UNIT TEST --
 if __name__ == '__main__':
     print("--- Running afe_interface.py as a script for testing ---")
     
