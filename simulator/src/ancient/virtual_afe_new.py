@@ -60,9 +60,9 @@ if __name__ == '__main__':
     # Define paths and parameters
     # Use pathlib to make paths robust
     try:
-        SIMULATOR_ROOT = Path(__file__).parent.parent
+        SIMULATOR_ROOT = Path(__file__).parent.parent.parent
     except NameError:
-        SIMULATOR_ROOT = Path.cwd().parent
+        SIMULATOR_ROOT = Path.cwd().parent.parent
     
     iq_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
     scan_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
