@@ -1,5 +1,3 @@
-# Save this file as: stft_processor.py
-
 import numpy as np
 from scipy import signal
 

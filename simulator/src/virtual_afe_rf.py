@@ -57,7 +57,7 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
     # Simple low-pass filter for this purpose
     # Cutoff should be less than the modulation frequency
     num_taps = 99
-    lpf_cutoff = modulation_frequency / (adc_sample_rate / 2) # Maybe I dont need to divide adc_sample_rate by 2
+    lpf_cutoff = modulation_frequency / (adc_sample_rate / 2)
     print(f"lpf_cutoff frequency is: {lpf_cutoff}")
     lpf_coeffs = signal.firwin(num_taps, lpf_cutoff)
     
