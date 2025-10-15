@@ -114,12 +114,40 @@ if __name__ == '__main__':
         # plot
         plt.plot(freqs / 1e6, spectrum_db_normalized, label=f'Depth = {depth_mm:.1f} mm')
 
-    # configure and show the plot
+    # # configure and show the plot
+    # plt.title('Normalized Power Spectrum at Different Imaging Depths (Center Angle, Avg. Channels)')
+    # plt.xlabel('Frequency Offset (MHz)')
+    # plt.ylabel('Power (dB relative to peak)')
+    # plt.grid(True, which='both', linestyle='--')
+    # plt.legend()
+    # plt.ylim(-40, 5) # zoom in on the top 40 dB to see the shape clearly
+    # plt.xlim(-fs_picmus/2 / 1e6, fs_picmus/2 / 1e6) # Set x-axis limits
+    # plt.show()
+
+
+    # configure plot labels and style
     plt.title('Normalized Power Spectrum at Different Imaging Depths (Center Angle, Avg. Channels)')
     plt.xlabel('Frequency Offset (MHz)')
     plt.ylabel('Power (dB relative to peak)')
     plt.grid(True, which='both', linestyle='--')
     plt.legend()
-    plt.ylim(-40, 5) # zoom in on the top 40 dB to see the shape clearly
-    plt.xlim(-fs_picmus/2 / 1e6, fs_picmus/2 / 1e6) # Set x-axis limits
-    plt.show()
+    plt.ylim(-40, 5) 
+    
+    # xlim uses the actual baseline sample rate
+    plt.xlim(-fs_baseline/2 / 1e6, fs_baseline/2 / 1e6) 
+
+    # define the output path and create the directory if it doesn't exist
+    plots_dir = Path(__file__).resolve().parent / "plots"
+    plots_dir.mkdir(parents=True, exist_ok=True) # exist_ok=True prevents an error if the folder already exists
+    
+    # define the full path for the output file
+    file_name = "stft_bandwidth_estimation.png"
+    output_path = plots_dir / file_name
+
+    # save the figure to the specified path
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    
+    print(f"\nSUCCESS: Plot saved to {output_path}")
+
+    # close the plot to prevent it from showing interactively
+    plt.close()

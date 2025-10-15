@@ -6,7 +6,7 @@ from pathlib import Path
 # data loader for RF data
 from afe_interface_rf import load_picmus_rf_data
 
-def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_frequency, decimation_factor, adc_sample_rate=125e6):
+def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_frequency, decimation_factor, adc_sample_rate=125e6, snr_db=None):
     """
     Performs the virtual AFE simulation on pre-loaded PICMUS RF data.
 
@@ -39,6 +39,24 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
     
     high_rate_rf = signal.resample_poly(data_for_one_angle_rf, up=upsample_factor_num, down=upsample_factor_den, axis=0)
     print(f"Upsampled RF data to shape: {high_rate_rf.shape}")
+
+    # add AWGN to the high-rate RF signal
+    if snr_db is not None:
+        print(f"Adding AWGN to achieve an SNR of {snr_db} dB...")
+        # calculate the power of the signal
+        signal_power = np.var(high_rate_rf)
+        
+        # calculate the required noise power for the target SNR
+        snr_linear = 10**(snr_db / 10)
+        noise_power = signal_power / snr_linear
+        
+        # generate gaussian noise with the required power (std dev = sqrt(power))
+        noise_std = np.sqrt(noise_power)
+        noise = np.random.normal(loc=0.0, scale=noise_std, size=high_rate_rf.shape)
+        
+        # add the noise to the signal
+        high_rate_rf = high_rate_rf + noise
+        print("Noise addition complete.")
     
     # I/Q Demodulation 
     # time vector for the high-rate RF signal
@@ -96,6 +114,7 @@ if __name__ == '__main__':
     baseline_decimation = 4
     test_decimation = 14
     adc_rate = 125e6
+    snr = 70
 
     # load the RF data
     try:
@@ -115,7 +134,8 @@ if __name__ == '__main__':
         fs_picmus=fs_picmus,
         modulation_frequency=mod_freq,
         decimation_factor=baseline_decimation,
-        adc_sample_rate=adc_rate
+        adc_sample_rate=adc_rate,
+        snr_db=snr # None by default
     )
     print(f"SUCCESS: Got baseline I/Q data (M={baseline_decimation}) with shape: {baseline_data_iq.shape}")
         
@@ -126,7 +146,8 @@ if __name__ == '__main__':
         fs_picmus=fs_picmus,
         modulation_frequency=mod_freq,
         decimation_factor=test_decimation,
-        adc_sample_rate=adc_rate
+        adc_sample_rate=adc_rate,
+        snr_db=snr # None by default
     )
     print(f"SUCCESS: Got test I/Q data (M={test_decimation}) with shape: {test_data_iq.shape}")
     
