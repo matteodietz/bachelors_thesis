@@ -1,5 +1,11 @@
 import numpy as np
 from scipy import signal
+import matplotlib.pyplot as plt
+from pathlib import Path
+
+# data loader and virtual afe
+from afe_interface_rf import load_picmus_rf_data
+from virtual_afe_rf import run_virtual_afe_processing_rf
 
 def run_stft_analysis(iq_data, fs, nperseg=256, overlap=128):
     """
@@ -13,7 +19,7 @@ def run_stft_analysis(iq_data, fs, nperseg=256, overlap=128):
 
     Returns:
         tuple: A tuple containing:
-            - freqs (np.ndarray): 1D array of sample frequencies.
+            - freqs (np.ndarray): 1D array of sample frequencies (shifted to be centered at 0).
             - time_bins (np.ndarray): 1D array of segment times (depths).
             - spectrogram (np.ndarray): 3D array of STFT power (channels, freqs, time_bins).
     """
@@ -23,19 +29,22 @@ def run_stft_analysis(iq_data, fs, nperseg=256, overlap=128):
     num_channels = iq_data.shape[1]
     print(f"--- Running STFT analysis on {num_channels} channels ---")
 
-    # The STFT function in scipy conveniently works along an axis.
-    # We want to perform the STFT on each channel (axis 0 of the transposed data).
-    # The input to `stft` should be shape (channels, samples).
+    # the input to stft is of shape (channels, samples).
     freqs, time_bins, stft_complex = signal.stft(
-        iq_data.T,  # Transpose to (channels, samples)
+        iq_data.T,  # transpose to (channels, samples)
         fs=fs,
         nperseg=nperseg,
         noverlap=overlap,
-        window='hann'
+        window='hann',
+        return_onesided=False # get both positive and negative frequencies for IQ data
     )
     
-    # The output `stft_complex` is (channels, freqs, time_bins)
-    # We want to return the power, which is the squared magnitude.
+    # the output stft_complex is (channels, freqs, time_bins)
+    # convert to power
     spectrogram_power = np.abs(stft_complex)**2
+    
+    # shift the frequency axis so that 0 Hz is in the center
+    freqs = np.fft.fftshift(freqs)
+    spectrogram_power = np.fft.fftshift(spectrogram_power, axes=1) # Shift along the frequency axis
     
     return freqs, time_bins, spectrogram_power

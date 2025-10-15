@@ -31,7 +31,7 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
     """
     print(f"--- Running Virtual AFE Processing for M={decimation_factor} ---")
     
-    # Upsample RF Data for the chosen angle
+    # upsample RF data for the chosen angle
     data_for_one_angle_rf = rf_data[angle_index, :, :].T
     
     upsample_factor_num = int(adc_sample_rate)
@@ -41,21 +41,21 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
     print(f"Upsampled RF data to shape: {high_rate_rf.shape}")
     
     # I/Q Demodulation 
-    # Time vector for the high-rate RF signal
+    # time vector for the high-rate RF signal
     num_samples_high_rate = high_rate_rf.shape[0]
     t = np.arange(num_samples_high_rate) / adc_sample_rate
     
     # Complex local oscillator signal
-    # Multiply by 2 to get the analytic signal (I + jQ) after filtering
+    # multiply by 2 to get the analytic signal (I + jQ) after filtering
     local_oscillator = 2 * np.exp(-1j * 2 * np.pi * modulation_frequency * t)
     
-    # Demodulate by multiplying the RF signal by the complex oscillator
-    # Reshape the local_oscillator to multiply it with each channel
+    # demodulate by multiplying the RF signal by the complex oscillator
+    # reshape the local_oscillator to multiply it with each channel
     analytic_signal_passband = high_rate_rf * local_oscillator[:, np.newaxis]
     
-    # Low-pass filter the result to remove the 2*f_c component and keep the baseband signal
-    # Simple low-pass filter for this purpose
-    # Cutoff should be less than the modulation frequency
+    # low-pass filter the result to remove the 2*f_c component and keep the baseband signal
+    # simple low-pass filter for this purpose
+    # cutoff should be less than the modulation frequency
     num_taps = 99
     lpf_cutoff = modulation_frequency / (adc_sample_rate / 2)
     print(f"lpf_cutoff frequency is: {lpf_cutoff}")
@@ -64,13 +64,13 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
     high_rate_iq = signal.lfilter(lpf_coeffs, 1.0, analytic_signal_passband, axis=0)
     print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
 
-    # Decimate the High-Rate I/Q Data
+    # decimate the high-rate I/Q data
     if decimation_factor < 1:
         raise ValueError("Decimation factor must be >= 1.")
     if decimation_factor == 1:
         decimated_iq = high_rate_iq.copy()
     else:
-        # The decimate function includes its own anti-aliasing filter
+        # the decimate function includes its own anti-aliasing filter
         decimated_iq = signal.decimate(high_rate_iq, q=decimation_factor, axis=0)
     
     fs_new = adc_sample_rate / decimation_factor
@@ -82,22 +82,22 @@ def run_virtual_afe_processing_rf(rf_data, angle_index, fs_picmus, modulation_fr
 if __name__ == '__main__':
     print("--- Running unit test for virtual_afe.py (RF input) ---")
 
-    # Define paths and parameters
+    # define paths and parameters
     try:
         SIMULATOR_ROOT = Path(__file__).parent.parent
     except NameError:
         SIMULATOR_ROOT = Path.cwd().parent
     
-    # !!! IMPORTANT: Need all three paths since modulation_frequency in RF dataset is 0 !!!
+    # !!! IMPORTANT: need all three paths since modulation_frequency in RF dataset is 0 !!!
     rf_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_rf.hdf5"
     iq_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
     scan_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
     
     baseline_decimation = 4
-    test_decimation = 5
+    test_decimation = 14
     adc_rate = 125e6
 
-    # Load the RF data
+    # load the RF data
     try:
         print("\nLoading PICMUS RF dataset from disk...")
         rf_data, angles, _, _, fs_picmus, mod_freq, _, _, _ = load_picmus_rf_data(rf_path, iq_path, scan_path)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     center_angle_index = np.argmin(np.abs(angles))
 
-    # Call the processing function for the baseline case
+    # call the processing function for the baseline case
     baseline_data_iq, _, fs_baseline = run_virtual_afe_processing_rf(
         rf_data=rf_data,
         angle_index=center_angle_index,
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     )
     print(f"SUCCESS: Got baseline I/Q data (M={baseline_decimation}) with shape: {baseline_data_iq.shape}")
         
-    # Call the processing function for the test case
+    # call the processing function for the test case
     test_data_iq, _, fs_test = run_virtual_afe_processing_rf(
         rf_data=rf_data,
         angle_index=center_angle_index,
@@ -130,19 +130,35 @@ if __name__ == '__main__':
     )
     print(f"SUCCESS: Got test I/Q data (M={test_decimation}) with shape: {test_data_iq.shape}")
     
-    # Visual Verification
+    # visual verification
     channel_to_plot = 64
     
-    # Plot the spectra of the generated I/Q data
+    # plot the spectra of the generated I/Q data
     freqs_baseline, psd_baseline = signal.welch(baseline_data_iq[:, channel_to_plot], fs=fs_baseline, nperseg=1024)
     freqs_test, psd_test = signal.welch(test_data_iq[:, channel_to_plot], fs=fs_test, nperseg=1024)
+
+    # convert to a relative dB scale
+    # find the absolute peak power from the high-quality baseline signal to use as a reference
+    peak_power = np.max(psd_baseline)
     
+    # convert both PSDs to dB relative to this single peak.
+    psd_baseline_db = 10 * np.log10(psd_baseline / peak_power)
+    psd_test_db = 10 * np.log10(psd_test / peak_power)
+    
+    # create the plot using a linear y-axis
     plt.figure(figsize=(12, 6))
-    plt.semilogy(freqs_baseline / 1e6, psd_baseline, label=f'Baseline I/Q Spectrum (M={baseline_decimation}, fs={fs_baseline/1e6:.2f} MHz)')
-    plt.semilogy(freqs_test / 1e6, psd_test, label=f'Test I/Q Spectrum (M={test_decimation}, fs={fs_test/1e6:.2f} MHz)')
-    plt.title(f'Power Spectral Density of Generated I/Q Data (Channel {channel_to_plot})')
+    
+    # use plt.plot, not plt.semilogy, because the data is now already in a log (dB) scale
+    plt.plot(freqs_baseline / 1e6, psd_baseline_db, label=f'Baseline I/Q Spectrum (M={baseline_decimation}, fs={fs_baseline/1e6:.2f} MHz)')
+    plt.plot(freqs_test / 1e6, psd_test_db, label=f'Test I/Q Spectrum (M={test_decimation}, fs={fs_test/1e6:.2f} MHz)')
+    
+    plt.title(f'Normalized Power Spectral Density of Generated I/Q Data (Channel {channel_to_plot})')
     plt.xlabel('Frequency (MHz)')
-    plt.ylabel('Power/Frequency (dB/Hz)')
+    plt.ylabel('Power (dB relative to peak)') # update the y-axis label
     plt.grid(True, which='both', linestyle='--')
     plt.legend()
+    
+    # set the y-axis limits to zoom in on the important part of the spectrum
+    # plt.ylim(-80, 5) # Show from +5dB down to -80dB
+    
     plt.show()
