@@ -3,25 +3,26 @@ from scipy import signal
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-# import data loader, virtual afe and stft_processor
+# import the RF-specific data loader, virtual afe, and stft_processor
 from afe_interface_rf import load_picmus_rf_data
-from virtual_afe import run_virtual_afe_processing
-from stft_processor import run_stft_analysis
+from virtual_afe_rf import run_virtual_afe_processing_rf
+from stft_processor_rf import run_stft_analysis_rf
 
 # --- MAIN ---
 if __name__ == '__main__':
-    print("--- Running 'Grand Analysis' to observe spectral changes with depth ---")
+    print("--- Running 'Grand Analysis' on RF DATA to observe spectral changes with depth ---")
 
-    # setup and data loading from hdf5 dataset
+    # setup and data loading
     try:
-        SIMULATOR_ROOT = Path(__file__).parent.parent
+        SIMULATOR_ROOT = Path(__file__).resolve().parent.parent
     except NameError:
         SIMULATOR_ROOT = Path.cwd().parent
     
     rf_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_rf.hdf5"
     iq_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_dataset_iq.hdf5"
     scan_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
-    adc_rate = 125e6
+    
+    adc_rate = 80e6 # use the ADC rate for RF processing
 
     try:
         rf_data, angles, _, sound_speed, fs_picmus, mod_freq, initial_time, _, _ = load_picmus_rf_data(rf_path, iq_path, scan_path)
@@ -29,42 +30,42 @@ if __name__ == '__main__':
         print(f"Test failed: Could not load data. Error: {e}")
         exit()
 
-    # get baseline I/Q data (M = 4) as a reference
-    baseline_decimation = 4
+    # get baseline RF data for analysis
+    # use a low decimation factor (e.g., M=2) as the baseline for RF
+    baseline_decimation_rf = 2
     center_angle_index = np.argmin(np.abs(angles))
 
-    baseline_iq_data, _, fs_baseline = run_virtual_afe_processing(
+    baseline_rf_data, _, fs_baseline_rf = run_virtual_afe_processing_rf(
         rf_data=rf_data,
         angle_index=center_angle_index,
         fs_picmus=fs_picmus,
-        modulation_frequency=mod_freq,
-        decimation_factor=baseline_decimation,
+        decimation_factor=baseline_decimation_rf,
         adc_sample_rate=adc_rate
     )
     
-    # run the STFT processor to get the full spectrogram
-    freqs, time_bins, spectrogram = run_stft_analysis(
-        iq_data=baseline_iq_data,
-        fs=fs_baseline
+    # run the RF STFT Processor
+    freqs, time_bins, spectrogram = run_stft_analysis_rf(
+        rf_data=baseline_rf_data,
+        fs=fs_baseline_rf,
+        nperseg=256,
+        hop=128
     )
     
-    # average across all channels for a robust, clean spectrogram
-    avg_spectrogram = np.mean(spectrogram, axis=0) # shape is (freqs, time_bins)
+    avg_spectrogram = np.mean(spectrogram, axis=0)
 
-    # select and plot spectra at different depths
+    # quantitative analysis and plotting
     num_depths = 5
-    print(f"Selecting and plotting spectra at {num_depths} different depths...")
+    print(f"\n--- Quantitative Analysis of RF Spectra at {num_depths} different depths ---")
     
     num_time_bins = avg_spectrogram.shape[1]
-    print(f"Number of time bins = {num_time_bins}")
-
-    # create equally spaced indices across the time bins
-    indices_to_plot = np.linspace(2, num_time_bins - 3, num_depths, dtype=int)
+    
+    start_index = int(num_time_bins * 0.1)
+    end_index = int(num_time_bins * 0.9)
+    indices_to_plot = np.linspace(start_index, end_index, num_depths, dtype=int)
     
     plt.figure(figsize=(14, 7))
 
     for i, time_idx in enumerate(indices_to_plot):
-        # get the spectrum slice for this specific time/depth
         spectrum_slice = avg_spectrogram[:, time_idx]
 
         # find the peak frequency
@@ -77,8 +78,6 @@ if __name__ == '__main__':
 
         # find the -20dB bandwidth edges
         threshold = -20 # dB
-        
-        # find all indices where the spectrum is above the threshold
         above_threshold_indices = np.where(spectrum_db_normalized > threshold)[0]
         
         if len(above_threshold_indices) > 0:
@@ -89,50 +88,41 @@ if __name__ == '__main__':
             upper_edge_freq_mhz = freqs[upper_edge_index] / 1e6
             bandwidth_mhz = upper_edge_freq_mhz - lower_edge_freq_mhz
 
-            # calculate maximum safe decimation factor
-            max_abs_freq = np.max([np.abs(freqs[lower_edge_index]), np.abs(freqs[upper_edge_index])])
+            # calculate max safe decimation factor for RF data
+            f_max_hz = freqs[upper_edge_index]
             practical_margin = 2.5 # oversampling
-            fs_min = practical_margin * max_abs_freq
+            fs_min = practical_margin * f_max_hz
             M_max = adc_rate / fs_min
 
         else:
-            # if no signal is above the threshold, report as invalid
-            lower_edge_freq_mhz = float('nan')
-            upper_edge_freq_mhz = float('nan')
-            bandwidth_mhz = float('nan')
+            lower_edge_freq_mhz, upper_edge_freq_mhz, bandwidth_mhz, M_max = (float('nan'),)*4
 
-        # calculate depth for reporting
         time_s = initial_time + time_bins[time_idx]
         depth_mm = time_s * sound_speed / 2 * 1000
 
-        # print the results to the terminal
         print(f"Depth: {depth_mm:5.1f} mm -> (Peak @ {peak_frequency_mhz:5.2f} MHz, "
               f"BW = {bandwidth_mhz:4.2f} MHz, "
               f"Edges: [{lower_edge_freq_mhz:5.2f}, {upper_edge_freq_mhz:5.2f}] MHz), "
-              f"M_max = {M_max:4.2f}")
+              f"M_max = {M_max}")
 
-        # plot
         plt.plot(freqs / 1e6, spectrum_db_normalized, label=f'Depth = {depth_mm:.1f} mm')
 
-    # configure plot labels and style
-    plt.title('Normalized Power Spectrum at Different Imaging Depths (Center Angle, Avg. Channels)')
-    plt.xlabel('Frequency Offset (MHz)')
+    # configure and save the plot
+    plt.axvline(x=mod_freq / 1e6, color='r', linestyle=':', label=f'Modulation Freq ({mod_freq/1e6:.2f} MHz)')
+    plt.title(f'Normalized RF Power Spectrum at Different Depths (fs = {fs_baseline_rf/1e6:.2f} MHz)')
+    plt.xlabel('Frequency (MHz)')
     plt.ylabel('Power (dB relative to peak)')
     plt.grid(True, which='both', linestyle='--')
     plt.legend()
-    plt.ylim(-40, 5) 
-    
-    # xlim uses the actual baseline sample rate
-    plt.xlim(-fs_baseline/2 / 1e6, fs_baseline/2 / 1e6) 
+    plt.ylim(-60, 5) 
+    plt.xlim(0, fs_baseline_rf/2 / 1e6) # RF spectrum is one-sided
 
-    # define the output path and create the directory if it doesn't exist
     plots_dir = Path(__file__).resolve().parent / "plots"
-    plots_dir.mkdir(parents=True, exist_ok=True) # exist_ok=True prevents an error if the folder already exists
-    file_name = "stft_bandwidth_estimation.png"
+    plots_dir.mkdir(parents=True, exist_ok=True)
+    file_name = "stft_bandwidth_estimation_rf.png"
     output_path = plots_dir / file_name
 
-    # save the figure to the specified path
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     
-    print(f"\nSUCCESS: Plot saved to {output_path}")
+    print(f"\nSUCCESS: RF analysis plot saved to {output_path}")
     plt.close()

@@ -5,7 +5,7 @@ from pathlib import Path
 
 # data loader and virtual afe
 from afe_interface_rf import load_picmus_rf_data
-from virtual_afe_rf import run_virtual_afe_processing_rf
+from virtual_afe import run_virtual_afe_processing
 
 def run_stft_analysis(iq_data, fs, nperseg=256, overlap=128):
     """
