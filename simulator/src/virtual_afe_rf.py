@@ -83,7 +83,7 @@ if __name__ == '__main__':
     baseline_decimation = 2 # RF data has higher bandwidth, so baseline M is lower
     test_decimation = 4
     adc_rate = 80e6 # New ADC rate for RF processing
-    snr = 40
+    snr = None
 
     # load the RF data
     try:

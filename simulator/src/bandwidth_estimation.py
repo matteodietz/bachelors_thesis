@@ -45,7 +45,9 @@ if __name__ == '__main__':
     # run the STFT processor to get the full spectrogram
     freqs, time_bins, spectrogram = run_stft_analysis(
         iq_data=baseline_iq_data,
-        fs=fs_baseline
+        fs=fs_baseline,
+        nperseg=128,
+        overlap=64
     )
     
     # average across all channels for a robust, clean spectrogram
@@ -123,7 +125,7 @@ if __name__ == '__main__':
     plt.ylim(-40, 5) 
     
     # xlim uses the actual baseline sample rate
-    plt.xlim(-fs_baseline/2 / 1e6, fs_baseline/2 / 1e6) 
+    plt.xlim(-fs_baseline/4 / 1e6, fs_baseline/4 / 1e6)     # should be fs_baseline / 2 but using fs_baseline / 4 for better visibility
 
     # define the output path and create the directory if it doesn't exist
     plots_dir = Path(__file__).resolve().parent / "plots"

@@ -5,8 +5,9 @@ from pathlib import Path
 
 # data loader for RF data
 from afe_interface_rf import load_picmus_rf_data
+from quick_spectrogram_test import load_picmus_iq_data
 
-def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequency, decimation_factor, adc_sample_rate=125e6, snr_db=None):
+def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequency, decimation_factor, adc_sample_rate=125e6, snr_db=None, transducer_bw_percent=67):
     """
     Performs the virtual AFE simulation on pre-loaded PICMUS RF data.
 
@@ -57,10 +58,55 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
         # add the noise to the signal
         high_rate_rf = high_rate_rf + noise
         print("Noise addition complete.")
+
+    # --- MATHEMATICALLY IDEAL BPF ---
+    print("Applying ideal FFT-based band-pass filter to RF signal...")
+    
+    # define the passband based on transducer specs
+    center_freq = modulation_frequency
+    bandwidth = center_freq * (87 / 100.0)
+    low_cutoff = center_freq - (bandwidth / 2)
+    high_cutoff = center_freq + (bandwidth / 2)
+    print(f"Ideal BPF Passband: [{low_cutoff/1e6:.2f}, {high_cutoff/1e6:.2f}] MHz")
+    
+    # go to the frequency domain
+    spectrum_rf = np.fft.fft(high_rate_rf, axis=0)
+    
+    # create the frequency bins vector and the filter mask
+    num_samples_high_rate = high_rate_rf.shape[0]
+    freqs = np.fft.fftfreq(num_samples_high_rate, 1/adc_sample_rate)
+    mask = np.where((np.abs(freqs) >= low_cutoff) & (np.abs(freqs) <= high_cutoff), 1, 0)
+    
+    # apply the filter mask
+    filtered_spectrum_rf = spectrum_rf * mask[:, np.newaxis]
+    
+    # go back to time domain
+    filtered_high_rate_rf = np.fft.ifft(filtered_spectrum_rf, axis=0).real # Use .real to discard tiny imaginary parts due to numerical precision
+    print("Band-pass filtering complete.")
+    # --- END OF MATHEMATICALLY IDEAL BPF ---
+
+    # --- REALISTIC BPF ---
+    # apply band-pass filter based on transducer specs
+    # center_freq = modulation_frequency
+    # bandwidth = center_freq * (transducer_bw_percent / 100)
+    # low_cutoff = center_freq - (bandwidth / 2)
+    # high_cutoff = center_freq + (bandwidth / 2)
+
+    # num_taps = 101
+    # nyquist = adc_sample_rate / 2
+
+    # # create band-pass filter coefficients
+    # bpf_coeffs = signal.firwin(num_taps, [low_cutoff, high_cutoff], fs=adc_sample_rate, pass_zero=False)
+
+    # # apply the BPF to the high-rate RF data
+    # filtered_high_rate_rf = signal.lfilter(bpf_coeffs, 1.0, high_rate_rf, axis=0)
+    # print(f"Band-pass filtering complete.")
+    # --- END OF REALISTIC BPF ---
     
     # I/Q Demodulation 
     # time vector for the high-rate RF signal
-    num_samples_high_rate = high_rate_rf.shape[0]
+    print(f"Performing I/Q Demodulation...")
+    num_samples_high_rate = filtered_high_rate_rf.shape[0]
     t = np.arange(num_samples_high_rate) / adc_sample_rate
     
     # Complex local oscillator signal
@@ -69,18 +115,43 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     
     # demodulate by multiplying the RF signal by the complex oscillator
     # reshape the local_oscillator to multiply it with each channel
-    analytic_signal_passband = high_rate_rf * local_oscillator[:, np.newaxis]
+    analytic_signal_passband = filtered_high_rate_rf * local_oscillator[:, np.newaxis]
     
     # low-pass filter the result to remove the 2*f_c component and keep the baseband signal
     # simple low-pass filter for this purpose
     # cutoff should be less than the modulation frequency
-    num_taps = 99
-    lpf_cutoff = modulation_frequency / (adc_sample_rate / 2)
-    print(f"lpf_cutoff frequency is: {lpf_cutoff}")
-    lpf_coeffs = signal.firwin(num_taps, lpf_cutoff)
+    # --- REALISTIC LPF ---
+    # lpf_coeffs = signal.firwin(99, bandwidth / 2, fs=adc_sample_rate)
     
-    high_rate_iq = signal.lfilter(lpf_coeffs, 1.0, analytic_signal_passband, axis=0)
+    # high_rate_iq = signal.lfilter(lpf_coeffs, 1.0, analytic_signal_passband, axis=0)
+    # print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
+
+    # --- MATHEMATICALLY IDEAL LPF ---
+    print("Applying ideal FFT-based low-pass filter...")
+    
+    # go to the frequency domain
+    spectrum = np.fft.fft(analytic_signal_passband, axis=0)
+    # absolute cutoff frequency in Hz
+    abs_cutoff_hz = (modulation_frequency * (91 / 100.0)) / 2.0
+    print(f"Ideal LPF cutoff frequency: {abs_cutoff_hz / 1e6:.2f} MHz")
+    # create the frequency bins vector for this FFT
+    freqs = np.fft.fftfreq(num_samples_high_rate, 1/adc_sample_rate)
+    # filter is 1 inside the passband and 0 outside
+    # two-sided spectrum (positive and negative frequencies)
+    mask = np.where(np.abs(freqs) <= abs_cutoff_hz, 1, 0)
+    # multiply the spectrum by the filter for each channel
+    filtered_spectrum = spectrum * mask[:, np.newaxis]
+    # go back to the time domain
+    high_rate_iq = np.fft.ifft(filtered_spectrum, axis=0)
     print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
+    
+    # --- END OF MATHEMATICALLY IDEAL LPF ---
+
+    # add AWGN noise a second time
+    if snr_db is not None:
+        print(f"Adding AWGN to achieve an SNR of {snr_db} dB...")
+        high_rate_iq = high_rate_iq + noise
+        print("Noise addition complete.")
 
     # decimate the high-rate I/Q data
     if decimation_factor < 1:
@@ -112,9 +183,9 @@ if __name__ == '__main__':
     scan_path = SIMULATOR_ROOT / "datasets/experiments/contrast_speckle/contrast_speckle_expe_scan.hdf5"
     
     baseline_decimation = 4
-    test_decimation = 14
+    test_decimation = 5
     adc_rate = 125e6
-    snr = 40
+    snr = None
 
     # load the RF data
     try:
@@ -161,10 +232,43 @@ if __name__ == '__main__':
     # convert to a relative dB scale
     # find the absolute peak power from the high-quality baseline signal to use as a reference
     peak_power = np.max(psd_baseline)
+    print(f"peak_power = {peak_power}")
     
     # convert both PSDs to dB relative to this single peak.
     psd_baseline_db = 10 * np.log10(psd_baseline / peak_power)
     psd_test_db = 10 * np.log10(psd_test / peak_power)
+
+
+    # --- ADD non upsampled I/Q data as comparison ---
+    try:
+        picmus_data, angles, fs_picmus = load_picmus_iq_data(iq_path)
+    except Exception as e:
+        print(f"Test failed: Could not load data. Error: {e}")
+        exit()
+
+    signal_iq_non_upsampled = picmus_data[center_angle_index, channel_to_plot, :]
+    
+    print(f"\nAnalyzing data from center angle #{center_angle_index}, channel #{channel_to_plot}")
+    print(f"Data shape: {signal_iq_non_upsampled.shape}, Sample Rate: {fs_picmus/1e6:.2f} MHz")
+
+    # calculate the Power Spectral Density (PSD) using Welch's method
+    # return_onesided=False for complex I/Q data.
+    freqs, psd = signal.welch(
+        signal_iq_non_upsampled,
+        fs=fs_picmus,
+        nperseg=256,         # Use a segment length for averaging
+        return_onesided=False
+    )
+    
+    # shift the frequency axis so 0 Hz is in the center
+    freqs = np.fft.fftshift(freqs)
+    psd = np.fft.fftshift(psd)
+    
+    # convert power to a relative dB scale for better visualization
+    psd_db = 10 * np.log10(psd + 1e-20)
+    psd_db_normalized = psd_db - np.max(psd_db)
+    # --- END OF non upsampled I/Q data
+
     
     # create the plot using a linear y-axis
     plt.figure(figsize=(12, 6))
@@ -172,6 +276,7 @@ if __name__ == '__main__':
     # use plt.plot, not plt.semilogy, because the data is now already in a log (dB) scale
     plt.plot(freqs_baseline / 1e6, psd_baseline_db, label=f'Baseline I/Q Spectrum (M={baseline_decimation}, fs={fs_baseline/1e6:.2f} MHz)')
     plt.plot(freqs_test / 1e6, psd_test_db, label=f'Test I/Q Spectrum (M={test_decimation}, fs={fs_test/1e6:.2f} MHz)')
+    plt.plot(freqs / 1e6, psd_db_normalized, label=f'Non Upsampled I/Q Data') # non upsampled I/Q data
     
     plt.title(f'Normalized Power Spectral Density of Generated I/Q Data (Channel {channel_to_plot})')
     plt.xlabel('Frequency (MHz)')
@@ -179,7 +284,18 @@ if __name__ == '__main__':
     plt.grid(True, which='both', linestyle='--')
     plt.legend()
     
-    # set the y-axis limits to zoom in on the important part of the spectrum
-    # plt.ylim(-80, 5) # Show from +5dB down to -80dB
+    # set the axis limits
+    plt.ylim(-100, 5)
+    plt.xlim(-2.51, 2.51)
+
+    # define the output path and create the directory if it doesn't exist
+    plots_dir = Path(__file__).resolve().parent / "plots"
+    plots_dir.mkdir(parents=True, exist_ok=True) # exist_ok=True prevents an error if the folder already exists
+    file_name = "virtual_afe.png"
+    output_path = plots_dir / file_name
+
+    # save the figure to the specified path
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     
-    plt.show()
+    print(f"\nSUCCESS: Plot saved to {output_path}")
+    plt.close()
