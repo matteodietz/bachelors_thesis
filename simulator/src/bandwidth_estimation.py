@@ -46,8 +46,8 @@ if __name__ == '__main__':
     freqs, time_bins, spectrogram = run_stft_analysis(
         iq_data=baseline_iq_data,
         fs=fs_baseline,
-        nperseg=128,
-        overlap=64
+        nperseg=256,
+        overlap=128
     )
     
     # average across all channels for a robust, clean spectrogram
