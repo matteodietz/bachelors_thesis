@@ -285,8 +285,8 @@ if __name__ == '__main__':
     plt.legend()
     
     # set the axis limits
-    plt.ylim(-100, 5)
-    plt.xlim(-2.51, 2.51)
+    # plt.ylim(-100, 5)
+    # plt.xlim(-2.51, 2.51)
 
     # define the output path and create the directory if it doesn't exist
     plots_dir = Path(__file__).resolve().parent / "plots"

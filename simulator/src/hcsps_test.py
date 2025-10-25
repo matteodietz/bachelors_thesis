@@ -66,7 +66,7 @@ if __name__ == '__main__':
     standard_peak_freq = freqs_standard[standard_peak_index_shifted]
 
     # HCSPS peak search algorithm
-    beta_to_test = 0.8
+    beta_to_test = 0.4
     
     hcsps_peak_index, _ = hcsps_peak_search(
         b=time_window_data,
