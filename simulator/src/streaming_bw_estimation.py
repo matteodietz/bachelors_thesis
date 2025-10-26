@@ -1,11 +1,12 @@
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 from afe_interface_rf import load_picmus_rf_data
 from virtual_afe import run_virtual_afe_processing
 
-# --- Function 1: The Core Streaming Processor (Unchanged) ---
+# --- Function 1: The Core Streaming Processor ---
 def streaming_dft_processor(b, fs, freq_bins_to_calc, window='hann'):
     """
     Simulates a one-pass, streaming, sparse DFT (Goertzel-like).
@@ -18,19 +19,21 @@ def streaming_dft_processor(b, fs, freq_bins_to_calc, window='hann'):
     W = np.ones(K, dtype=np.complex128)
     E = np.exp(-1j * 2 * np.pi * freq_bins_to_calc / fs)
 
+    # streaming DFT calculation
     for n in range(N):
         x_n = b[n]
         h_n = win[n]
         A += x_n * h_n * W
         W *= E
         
+    # create a dictionary of frequency bins with their corresponding accumulator value (DFT)
     final_dft_bins = {freq: accumulator for freq, accumulator in zip(freq_bins_to_calc, A)}
     return final_dft_bins
 
-# --- Function 2: The Corrected Analysis and Edge Finder ---
+# --- Function 2: Bandwidth Edge Finder ---
 def find_bandwidth_edges(dft_bins, threshold_db=-20):
     """
-    Finds bandwidth edges from a sparse dictionary of DFT bin results,
+    Finds bandwidth edges from a dictionary of DFT bin results,
     correctly handling complex I/Q spectra.
     """
     freqs = np.array(list(dft_bins.keys()))
@@ -50,14 +53,14 @@ def find_bandwidth_edges(dft_bins, threshold_db=-20):
     
     f_left, f_right = float('nan'), float('nan')
     
-    # --- CORRECTED SEARCH LOGIC ---
+    # --- SEARCH LOGIC ---
     # Search for left edge (from peak downwards into NEGATIVE frequencies)
     for i in range(peak_idx, 0, -1):
         if power_db_norm_sorted[i-1] < threshold_db <= power_db_norm_sorted[i]:
             L1, L2 = power_db_norm_sorted[i-1], power_db_norm_sorted[i]
             f1, f2 = freqs_sorted[i-1], freqs_sorted[i]
             f_left = f1 + (f2 - f1) * (threshold_db - L1) / (L2 - L1)
-            break
+            
             
     # Search for right edge (from peak upwards into POSITIVE frequencies)
     for i in range(peak_idx, len(freqs_sorted) - 1):
@@ -65,21 +68,15 @@ def find_bandwidth_edges(dft_bins, threshold_db=-20):
             L1, L2 = power_db_norm_sorted[i], power_db_norm_sorted[i+1]
             f1, f2 = freqs_sorted[i], freqs_sorted[i+1]
             f_right = f1 + (f2 - f1) * (threshold_db - L1) / (L2 - L1)
-            break
-    # --- END OF CORRECTION ---
+         
             
     return f_left, f_right
 
-# --- Function 3: The "Master" Orchestrator ---
+# --- Function 3: Master Script ---
 if __name__ == '__main__':
     print("--- Running Streaming DFT Test on REAL PICMUS Data ---")
-    
-    # --- 1. Setup and Data Loading ---
-    from pathlib import Path
-    # Import your data loaders and virtual AFE
-    from afe_interface_rf import load_picmus_rf_data
-    from virtual_afe_rf import run_virtual_afe_processing_rf
 
+    # --- 1. Load PICMUS Data
     try:
         SIMULATOR_ROOT = Path(__file__).resolve().parent.parent
     except NameError:
@@ -112,7 +109,7 @@ if __name__ == '__main__':
     # --- 3. Select ONE STFT Window to Analyze ---
     nperseg = 256
     channel_to_test = 64
-    window_num_to_test = 30 # A window from a medium depth
+    window_num_to_test = 29 
     
     start_sample = window_num_to_test * (nperseg // 2) # Assuming 50% overlap (hop = nperseg/2)
     end_sample = start_sample + nperseg
@@ -137,14 +134,13 @@ if __name__ == '__main__':
     dft_bins = streaming_dft_processor(time_window_data, fs_baseline, S_bins, window='hann')
     
     # --- 5. Find the Bandwidth Edges ---
-    threshold_db = -40
+    threshold_db = -20 # parameter to choose
     f_left, f_right = find_bandwidth_edges(dft_bins, threshold_db=threshold_db)
     print(f"Streaming DFT Estimated Edges: [{f_left/1e6:.3f}, {f_right/1e6:.3f}] MHz")
     
-    # --- 6. Ground Truth and Visual Confirmation ---
     
-   # --- Calculate the GROUND TRUTH Power Spectral Density using Welch's method ---
-    # `welch` automatically handles windowing, averaging, and PSD scaling.
+    # --- 6. Ground Truth and Visual Confirmation ---
+    # calculate PSD using Welch's method 
     freqs_welch, psd_welch = signal.welch(
         time_window_data,
         fs=fs_baseline,
@@ -168,21 +164,18 @@ if __name__ == '__main__':
     plt.plot(freqs_welch_shifted / 1e6, psd_db_welch_norm, 'k-', label=f'Ground Truth PSD ({nperseg}-pt Welch)', alpha=0.6)
 
     # --- Convert the sparse DFT bins to PSD and Plot ---
-    
     # Get the raw values from your streaming processor
     freqs1 = np.array(list(dft_bins.keys()))
     powers1 = np.abs(np.array(list(dft_bins.values())))**2 # This is Power Spectrum
 
-    # --- THIS IS THE KEY CORRECTION ---
     # To convert Power Spectrum to PSD, we normalize by the Equivalent Noise Bandwidth (ENBW)
     # of the window function and the sample rate.
     # ENBW = fs * sum(win**2) / sum(win)**2
-    # For `signal.welch`, the normalization is `fs * sum(win**2)`.
+    # For signal.welch, the normalization is fs * sum(win**2).
     win = signal.windows.get_window('hann', nperseg)
     enbw_scaling = fs_baseline * np.sum(win**2)
     
     psd1 = powers1 / enbw_scaling
-    # --- END OF CORRECTION ---
 
     db1 = 10 * np.log10(psd1 + 1e-20)
     
@@ -203,4 +196,4 @@ if __name__ == '__main__':
     plt.show()
 
     
-    # (The Frame 2 refinement code would follow here if needed)
+    # (The Frame 2 refinement code would follow here)

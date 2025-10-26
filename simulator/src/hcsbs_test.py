@@ -61,7 +61,7 @@ if __name__ == '__main__':
     # --- 4. Find "Ground Truth" Edges with a High-Resolution FFT ---
     threshold_db = -25 # The target threshold
     
-    zero_padding_factor = 16
+    zero_padding_factor = 1 # 16
     N_fine = nperseg * zero_padding_factor
     
     full_fft = np.fft.fftshift(np.fft.fft(time_window_data * signal.windows.hann(nperseg), n=N_fine))

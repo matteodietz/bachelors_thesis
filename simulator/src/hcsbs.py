@@ -67,7 +67,7 @@ def hcsbs_bandwidth_search(b, N, k, beta, threshold_db, fs, window='hann'):
         zoom_width = int(resolution_ratio)
         half_width = zoom_width // 2
         
-        # --- YOUR DIRECTIONAL SEARCH OPTIMIZATION ---
+        # --- DIRECTIONAL SEARCH OPTIMIZATION ---
         if edge_type == 'lower':
             # For lower edge, search inward (right) from the coarse estimate
             start_offset = 0      # 0
@@ -78,7 +78,7 @@ def hcsbs_bandwidth_search(b, N, k, beta, threshold_db, fs, window='hann'):
             end_offset = 0       # 0
         
         bins_to_check = (zoom_center_bin + np.arange(start_offset, end_offset + 1)) % N
-        # --- END OF OPTIMIZATION ---
+       
 
         n = int(beta * N)
         if n < 1: n = 1

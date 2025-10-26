@@ -48,7 +48,7 @@ if __name__ == '__main__':
     hop = 128
     channel_to_test = 64
     
-    window_num_to_test = 30
+    window_num_to_test = 5
     start_sample = window_num_to_test * hop
     end_sample = start_sample + nperseg
     
