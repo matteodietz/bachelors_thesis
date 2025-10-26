@@ -30,7 +30,7 @@ def streaming_dft_processor(b, fs, freq_bins_to_calc, window='hann'):
     final_dft_bins = {freq: accumulator for freq, accumulator in zip(freq_bins_to_calc, A)}
     return final_dft_bins
 
-# --- Function 2: Bandwidth Edge Finder ---
+# --- Function 2: Bandwidth Edge Estimation ---
 def find_bandwidth_edges(dft_bins, threshold_db=-20):
     """
     Finds bandwidth edges from a dictionary of DFT bin results,
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     dft_bins = streaming_dft_processor(time_window_data, fs_baseline, S_bins, window='hann')
     
     # --- 5. Find the Bandwidth Edges ---
-    threshold_db = -20 # parameter to choose
+    threshold_db = -30 # parameter to choose
     f_left, f_right = find_bandwidth_edges(dft_bins, threshold_db=threshold_db)
     print(f"Streaming DFT Estimated Edges: [{f_left/1e6:.3f}, {f_right/1e6:.3f}] MHz")
     

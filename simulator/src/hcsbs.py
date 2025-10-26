@@ -40,18 +40,21 @@ def hcsbs_bandwidth_search(b, N, k, beta, threshold_db, fs, window='hann'):
     k_coarse_upper_shifted = max(k_coarse_edges_shifted)
 
     # --- Stage 2: Directional Refinement for Each Edge ---
-    
-    # We need a stable reference peak power for normalization in the refinement stage
+    # The normalization factor for converting Power Spectrum to PSD
+    win_fine = signal.windows.get_window(window, N)
+    psd_scaling_factor_fine = fs * np.sum(win_fine**2)
+
+    # 1. Get a STABLE Reference Peak PSD
     coarse_peak_idx_shifted = np.argmax(P_coarse_db_norm)
     coarse_peak_freq = freqs_coarse_shifted[coarse_peak_idx_shifted]
-    # Find the corresponding high-resolution bin for the reference power calculation
     freqs_fine_unwrapped = np.fft.fftfreq(N, 1/fs)
     peak_ref_bin = np.argmin(np.abs(freqs_fine_unwrapped - coarse_peak_freq))
 
     exponent_ref = -1j * 2 * np.pi * peak_ref_bin * np.arange(N) / N
     inner_prod_ref = np.dot(b_windowed, np.exp(exponent_ref))
     peak_power_ref = np.abs(inner_prod_ref)**2
-    if peak_power_ref == 0: peak_power_ref = 1e-20
+    peak_psd_ref = peak_power_ref / psd_scaling_factor_fine # Convert to PSD
+    if peak_psd_ref == 0: peak_psd_ref = 1e-20
     
     z_refined_edges = []
     

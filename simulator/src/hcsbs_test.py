@@ -59,7 +59,7 @@ if __name__ == '__main__':
     print(f"\n--- Analyzing STFT window #{window_num_to_test} (samples {start_sample}-{end_sample}) ---")
 
     # --- 4. Find "Ground Truth" Edges with a High-Resolution FFT ---
-    threshold_db = -25 # The target threshold
+    threshold_db = -20 # The target threshold
     
     zero_padding_factor = 1 # 16
     N_fine = nperseg * zero_padding_factor
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         true_lower_edge, true_upper_edge = (float('nan'), float('nan'))
     
     # --- 5. Run your HCSBS Bandwidth Search Algorithm ---
-    beta_to_test = 0.5
+    beta_to_test = 0.8
     
     z_lower_idx, z_upper_idx = hcsbs_bandwidth_search(
         b=time_window_data,
