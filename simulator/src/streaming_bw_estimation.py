@@ -39,6 +39,8 @@ def find_bandwidth_edges(dft_bins, threshold_db=-20):
     freqs = np.array(list(dft_bins.keys()))
     accumulators = np.array(list(dft_bins.values()))
     
+    # just using power not psd because we are comparing values within one spectrum
+    # we're not comparing values between two different spectra that were calculated differently
     powers = np.abs(accumulators)**2
     if np.max(powers) == 0: return float('nan'), float('nan')
     
@@ -48,14 +50,18 @@ def find_bandwidth_edges(dft_bins, threshold_db=-20):
     sort_indices = np.argsort(freqs)
     freqs_sorted = freqs[sort_indices]
     power_db_norm_sorted = power_db_norm[sort_indices]
-    
-    peak_idx = np.argmax(power_db_norm_sorted)
+
+    # define the starting points for the bw edge search
+    start_search_idx_left = np.argmin(np.abs(freqs_sorted))
+    start_search_freq_left = freqs_sorted[start_search_idx_left] # just for plotting
+    start_search_idx_right = np.argmin(np.abs(freqs_sorted)) + 1
+    start_search_freq_right = freqs_sorted[start_search_idx_right] # just for plotting
     
     f_left, f_right = float('nan'), float('nan')
     
     # --- SEARCH LOGIC ---
     # Search for left edge (from peak downwards into NEGATIVE frequencies)
-    for i in range(peak_idx, 0, -1):
+    for i in range(start_search_idx_left, 0, -1):
         if power_db_norm_sorted[i-1] < threshold_db <= power_db_norm_sorted[i]:
             L1, L2 = power_db_norm_sorted[i-1], power_db_norm_sorted[i]
             f1, f2 = freqs_sorted[i-1], freqs_sorted[i]
@@ -63,14 +69,14 @@ def find_bandwidth_edges(dft_bins, threshold_db=-20):
             
             
     # Search for right edge (from peak upwards into POSITIVE frequencies)
-    for i in range(peak_idx, len(freqs_sorted) - 1):
+    for i in range(start_search_idx_right, len(freqs_sorted) - 1):
         if power_db_norm_sorted[i+1] < threshold_db <= power_db_norm_sorted[i]:
             L1, L2 = power_db_norm_sorted[i], power_db_norm_sorted[i+1]
             f1, f2 = freqs_sorted[i], freqs_sorted[i+1]
             f_right = f1 + (f2 - f1) * (threshold_db - L1) / (L2 - L1)
          
             
-    return f_left, f_right
+    return f_left, f_right, start_search_freq_left, start_search_freq_right
 
 # --- Function 3: Master Script ---
 if __name__ == '__main__':
@@ -110,6 +116,16 @@ if __name__ == '__main__':
     nperseg = 256
     channel_to_test = 64
     window_num_to_test = 29 
+    hop = nperseg // 2
+
+    total_samples = baseline_iq_data.shape[0]
+    num_windows_total = int(np.floor((total_samples - nperseg) / hop)) + 1
+    
+    print(f"\n--- STFT Analysis Setup ---")
+    print(f"Total samples in A-line: {total_samples}")
+    print(f"Window size (nperseg):   {nperseg}")
+    print(f"Hop size:                {hop}")
+    print(f"Total number of STFT windows available: {num_windows_total}")
     
     start_sample = window_num_to_test * (nperseg // 2) # Assuming 50% overlap (hop = nperseg/2)
     end_sample = start_sample + nperseg
@@ -127,15 +143,15 @@ if __name__ == '__main__':
     delta_f = 0.25e6 
     half_bw_est = mod_freq / 2
 
-    s_fine_left = np.linspace(-half_bw_est - delta_f, -half_bw_est + delta_f, 16) 
-    s_fine_right = np.linspace(half_bw_est -delta_f, half_bw_est + delta_f, 16) 
+    s_fine_left = np.linspace(-half_bw_est - delta_f, -half_bw_est + delta_f, 8) 
+    s_fine_right = np.linspace(half_bw_est -delta_f, half_bw_est + delta_f, 8) 
     S_bins = np.unique(np.concatenate([s_coarse, s_fine_left, s_fine_right]))
     
     dft_bins = streaming_dft_processor(time_window_data, fs_baseline, S_bins, window='hann')
     
     # --- 5. Find the Bandwidth Edges ---
     threshold_db = -30 # parameter to choose
-    f_left, f_right = find_bandwidth_edges(dft_bins, threshold_db=threshold_db)
+    f_left, f_right, search_start_freq_left, search_start_freq_right = find_bandwidth_edges(dft_bins, threshold_db=threshold_db)
     print(f"Streaming DFT Estimated Edges: [{f_left/1e6:.3f}, {f_right/1e6:.3f}] MHz")
     
     
@@ -186,6 +202,10 @@ if __name__ == '__main__':
     plt.axvline(x=f_left/1e6, color='r', linestyle='--', label=f'Est. Lower Edge ({f_left/1e6:.3f} MHz)')
     plt.axvline(x=f_right/1e6, color='g', linestyle='--', label=f'Est. Upper Edge ({f_right/1e6:.3f} MHz)')
     plt.axhline(y=threshold_db, color='grey', linestyle=':', label=f'{threshold_db} dB Threshold')
+
+    # Plot the search start point
+    plt.plot(search_start_freq_left / 1e6, 0, 'rX', markersize=7, label=f'Left Search Start Point ({search_start_freq_left/1e6:.3f} MHz)')
+    plt.plot(search_start_freq_right / 1e6, 0, 'gX', markersize=7, label=f'Right Search Start Point ({search_start_freq_right/1e6:.3f} MHz)')
     
     plt.title(f'Streaming DFT Bandwidth Estimation on Real Data (Window #{window_num_to_test})')
     plt.xlabel('Frequency (MHz)')
@@ -197,3 +217,4 @@ if __name__ == '__main__':
 
     
     # (The Frame 2 refinement code would follow here)
+    
