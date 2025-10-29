@@ -127,8 +127,8 @@ if __name__ == '__main__':
     
     # Re-center the fine clusters on the results from Stage 1
     delta_f2 = 0.25e6 # Use a narrower zoom window for refinement
-    s_fine_left2 = np.linspace(f_left1 - delta_f2, f_left1 + delta_f2, 4)
-    s_fine_right2 = np.linspace(f_right1 - delta_f2, f_right1 + delta_f2, 4)
+    s_fine_left2 = np.linspace(f_left1 - delta_f2, f_left1 + delta_f2, 5)
+    s_fine_right2 = np.linspace(f_right1 - delta_f2, f_right1 + delta_f2, 5)
     S_bins2 = np.unique(np.concatenate([s_coarse2, s_fine_left2, s_fine_right2]))
 
     dft_bins2 = streaming_dft_processor(time_window_data2, fs_baseline, S_bins2, window='hann')
