@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.2.2 (64-bit)
+# SW Build 6060944 on Thu Mar 06 19:10:09 MST 2025
+# IP Build 6050500 on Thu Mar  6 23:33:39 MST 2025
+# SharedData Build 6060542 on Thu Mar 06 10:31:07 MST 2025
+# Start of session at: Wed Oct 29 16:51:08 2025
+# Process ID         : 23997
+# Current directory  : /home/bsc25h10/mdietz/bachelors_thesis/rtl/src
+# Command line       : vivado
+# Log file           : /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/vivado.log
+# Journal file       : /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/vivado.jou
+# Running On         : badile11.ee.ethz.ch
+# Platform           : CentOS
+# Operating System   : CentOS Linux release 7.9.2009 (Core)
+# Processor Detail   : AMD Ryzen 9 9900X 12-Core Processor
+# CPU Frequency      : 600.000 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 24
+# Host memory        : 66895 MB
+# Swap memory        : 53687 MB
+# Total Virtual      : 120582 MB
+# Available Virtual  : 118265 MB
+#-----------------------------------------------------------
+start_gui
