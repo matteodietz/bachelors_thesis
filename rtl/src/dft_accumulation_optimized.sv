@@ -14,10 +14,12 @@ module dft_accumulation #(
     input  logic sample_valid_i,               // New sample available
     input  logic last_sample_i,                // Last sample in sequence
     
-    // Input data - Complex I/Q signal
+    // Input data - Complex I/Q signal from AFE
     input  logic signed [IQ_WIDTH-1:0] i_sample_i,      // I component (real)
     input  logic signed [IQ_WIDTH-1:0] q_sample_i,      // Q component (imaginary)
-    input  logic signed [WINDOW_WIDTH-1:0] window_coeff_i,  // Current window coefficient h[n]
+
+    // Current window coefficient h[n] - precomputed and streamed from APU
+    input  logic signed [WINDOW_WIDTH-1:0] window_coeff_i,
     
     // Complex oscillator values W[n,k] - precomputed and streamed from APU
     input  logic signed [OSC_WIDTH-1:0] W_real_i[NUM_BINS],
@@ -27,7 +29,7 @@ module dft_accumulation #(
     output logic signed [ACCUM_WIDTH-1:0] A_real_o[NUM_BINS],
     output logic signed [ACCUM_WIDTH-1:0] A_imag_o[NUM_BINS],
     output logic valid_o,                      // Accumulation complete
-    output logic busy_o                        // Module is processing
+    output logic busy_o                        // Module is processing, can get rid of this
 );
 
     // State machine
