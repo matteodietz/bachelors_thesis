@@ -1,0 +1,370 @@
+/*
+
+AMD Vivado v2024.2.2 (64-bit) [Major: 2024, Minor: 2]
+SW Build: 6060944 on Thu Mar 06 19:10:09 MST 2025
+IP Build: 6050500 on Thu Mar  6 23:33:39 MST 2025
+IP Build: 6050500 on Thu Mar  6 23:33:39 MST 2025
+
+Process ID (PID): 21411
+License: Customer
+Mode: GUI Mode
+
+Current time: 	Thu Nov 06 12:35:11 UTC 2025
+Time zone: 	Coordinated Universal Time (UTC)
+
+OS: CentOS Linux release 7.9.2009 (Core)
+OS Version: 4.18.0-553.40.1.el8_10.x86_64
+OS Architecture: amd64
+Available processors (cores): 24
+LSB Release Description: CentOS Linux release 7.9.2009 (Core)
+
+Display: 1
+Screen size: 2560x1440
+Local screen bounds: x = 1920, y = 0, width = 2560, height = 1440
+Screen resolution (DPI): 100
+Available screens: 2
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+Scale size: 12
+OS font scaling: 100%
+Anti-Alias Enabled: false
+
+Java version: 	21.0.1 64-bit
+
+Java home: 	/usr/pack/vitis-2024.2-dz/Vivado/2024.2/tps/lnx64/jre21.0.1_12
+Java executable: 	/usr/pack/vitis-2024.2-dz/Vivado/2024.2/tps/lnx64/jre21.0.1_12/bin/java
+Java arguments: 	[-Dsun.java2d.pmoffscreen=false, -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2, -Dsun.java2d.xrender=false, -Dsun.java2d.uiScale.enabled=false, -Dswing.aatext=true, -XX:-UsePerfData, -Djdk.map.althashing.threshold=512, -XX:StringTableSize=4072, -XX:+UseStringDeduplication, -XX:MaxGCPauseMillis=200, -XX:ParallelGCThreads=4, -XX:+ParallelRefProcEnabled, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.desktop/sun.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-opens=java.desktop/javax.swing=ALL-UNNAMED, --add-opens=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-opens=java.desktop/java.awt.event=ALL-UNNAMED, --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.base/java.nio=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.tree=ALL-UNNAMED, --add-exports=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED, --add-exports=java.desktop/sun.swing=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.table=ALL-UNNAMED, --add-exports=java.desktop/sun.swing.plaf.synth=ALL-UNNAMED, --add-exports=java.desktop/sun.awt.shell=ALL-UNNAMED, --add-exports=java.base/sun.security.action=ALL-UNNAMED, --add-exports=java.desktop/sun.font=ALL-UNNAMED, --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED, -XX:NewSize=80m, -XX:MaxNewSize=80m, -Xms512m, -Xmx4072m, -Xss10m, -Xrs]
+Java initial memory (-Xms): 	512 MB
+Java maximum memory (-Xmx):	 3 GB
+
+User name: 	bsc25h10
+User home directory: /home/bsc25h10
+User working directory: /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+RDI_BASEROOT: /usr/pack/vitis-2024.2-dz/Vivado
+HDI_APPROOT: /usr/pack/vitis-2024.2-dz/Vivado/2024.2
+RDI_DATADIR: /usr/pack/vitis-2024.2-dz/SharedData/2024.2/data:/usr/pack/vitis-2024.2-dz/Vivado/2024.2/data
+RDI_BINDIR: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/bin
+
+Vivado preferences file: /home/bsc25h10/.Xilinx/Vivado/2024.2/vivado.xml
+Vivado preferences directory: /home/bsc25h10/.Xilinx/Vivado/2024.2/
+Vivado layouts directory: /home/bsc25h10/.Xilinx/Vivado/2024.2/data/layouts
+PlanAhead jar file: 	/usr/pack/vitis-2024.2-dz/Vivado/2024.2/lib/classes/planAhead.jar
+Vivado log file: 	/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.log
+Vivado journal file: 	/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.jou
+Engine tmp dir: 	./.Xil/Vivado-21411-badile11.ee.ethz.ch
+Non-Default Parameters:	[]
+
+Xilinx & AMD Environment Variables
+--------------------------------------------------------------------------------------------
+RDI_APPROOT: /usr/pack/vitis-2024.2-dz/Vivado/2024.2
+RDI_BASEROOT: /usr/pack/vitis-2024.2-dz/Vivado
+RDI_BINROOT: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/bin
+RDI_BUILD: yes
+RDI_DATADIR: /usr/pack/vitis-2024.2-dz/SharedData/2024.2/data:/usr/pack/vitis-2024.2-dz/Vivado/2024.2/data
+RDI_INSTALLROOT: /usr/pack/vitis-2024.2-dz
+RDI_INSTALLVER: 2024.2
+RDI_JAVA_PLATFORM: 
+RDI_JAVA_VERSION: 21.0.1_12
+RDI_LIBDIR: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/lib/lnx64.o/Default:/usr/pack/vitis-2024.2-dz/Vivado/2024.2/lib/lnx64.o
+RDI_OPT_EXT: .o
+RDI_PATCHROOT: 
+RDI_PLATFORM: lnx64
+RDI_PREPEND_PATH: /usr/pack/vitis-2024.2-dz/Vitis/2024.2/bin:/usr/pack/vitis-2024.2-dz/Vivado/2024.2/ids_lite/ISE/bin/lin64
+RDI_PROG: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/bin/unwrapped/lnx64.o/vivado
+RDI_SESSION_INFO: /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado:badile11.ee.ethz.ch_1762432484_20884
+RDI_SHARED_DATA: /usr/pack/vitis-2024.2-dz/SharedData/2024.2/data
+RDI_TPS_ROOT: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/tps/lnx64
+RDI_USE_JDK21: True
+SHELL: /bin/bash
+XILINX: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/ids_lite/ISE
+XILINX_DSP: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/ids_lite/ISE
+XILINX_HLS: /usr/pack/vitis-2024.2-dz/Vitis/2024.2
+XILINX_PLANAHEAD: /usr/pack/vitis-2024.2-dz/Vivado/2024.2
+XILINX_SDK: /usr/pack/vitis-2024.2-dz/Vitis/2024.2
+XILINX_VITIS: /usr/pack/vitis-2024.2-dz/Vitis/2024.2
+XILINX_VIVADO: /usr/pack/vitis-2024.2-dz/Vivado/2024.2
+XILINX_XRT: /usr/pack/vitis-2024.2-dz/xrt
+
+
+GUI allocated memory:	512 MB
+GUI max memory:		4,072 MB
+Engine allocated memory: 1,682 MB
+
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// HMemoryUtils.trashcanNow. Engine heap size: 1,682 MB. GUI used memory: 64 MB. Current time: 11/6/25, 12:35:12 PM UTC
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+selectButton(PAResourceEtoH.GettingStartedView_CREATE_NEW_PROJECT, "Create Project"); // t (PAResourceEtoH.GettingStartedView_CREATE_NEW_PROJECT)
+// Run Command: PAResourceCommand.PACommandNames_NEW_PROJECT
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+// Elapsed time: 43 seconds
+setText(PAResourceOtoP.ProjectNameChooser_PROJECT_NAME, "bw_estim"); // ad (PAResourceOtoP.ProjectNameChooser_PROJECT_NAME)
+selectCheckBox(PAResourceOtoP.ProjectNameChooser_CREATE_PROJECT_SUBDIRECTORY, "Create project subdirectory", false); // f (PAResourceOtoP.ProjectNameChooser_CREATE_PROJECT_SUBDIRECTORY): FALSE
+// WARNING: HEventQueue.dispatchEvent() is taking  1001 ms.
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories", "New Project"); // a (PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES)
+// Elapsed time: 25 seconds
+setFolderChooser("/home/bsc25h10/mdietz/bachelors_thesis/rtl/src");
+// Elapsed time: 17 seconds
+selectCheckBox(PAResourceQtoS.SrcChooserPanel_SCAN_AND_ADD_RTL_INCLUDE_FILES_INTO, "Scan and add RTL include files into project", true); // f (PAResourceQtoS.SrcChooserPanel_SCAN_AND_ADD_RTL_INCLUDE_FILES_INTO): TRUE
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+// [GUI Memory]: 149 MB (+153956kb) [00:06:51]
+// [Engine Memory]: 1,687 MB (+1617918kb) [00:06:51]
+// Elapsed time: 252 seconds
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,702 MB. GUI used memory: 66 MB. Current time: 11/6/25, 12:41:52 PM UTC
+// Elapsed time: 36 seconds
+setText("PAResourceEtoH.FPGAChooser_FPGA_TABLE_SEARCH_FIELD", (String) null); // OverlayTextField (PAResourceEtoH.FPGAChooser_FPGA_TABLE_SEARCH_FIELD)
+selectTab(PAResourceOtoP.PartChooser_TABBED_PANE, (HResource) null, "Boards", 1); // g (PAResourceOtoP.PartChooser_TABBED_PANE)
+// [GUI Memory]: 218 MB (+64767kb) [00:07:28]
+// [Engine Memory]: 1,778 MB (+6588kb) [00:07:28]
+// Elapsed time: 174 seconds
+setText("PAResourceAtoD.BoardChooser_BOARD_TABLE_SEARCH_FIELD", "kria k26"); // OverlayTextField (PAResourceAtoD.BoardChooser_BOARD_TABLE_SEARCH_FIELD)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26C SOM"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+openHTML ("www.xilinx.com/k26c"); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26C SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26C SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+// Elapsed time: 14 seconds
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+openHTML ("www.xilinx.com/k26i"); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+expandTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26I SOM ; Kria K26I SOM ; Kria K26I SOM ; xilinx.com ; 1.4 ; Kria K26I SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; -40 ; 100 ; 100 ; I ; 0.698 ; 0.720 ; 0.742", 1, "Kria K26I SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26I SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTableHyperlink(PAResourceAtoD.BoardChooser_BOARD_TABLE, PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1, "Kria K26C SOM", "New Project"); // k (PAResourceTtoZ.XHubBoardTable_BOARD_NAME_LINE_1)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+selectTreeTable(PAResourceAtoD.BoardChooser_BOARD_TABLE, "Kria K26C SOM ; Kria K26C SOM ; Kria K26C SOM ; xilinx.com ; 1.4 ; Kria K26C SOM ; 784 ; Rev_B01 ; 189 ; 117120 ; 234240 ; 144 ; 64 ; 1248 ; 6304 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 4 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 2 ; 4 ;  ; 0 ;  ;  ; 0 ;  ;  ; 0 ; 85 ; 85 ; C ; 0.698 ; 0.720 ; 0.742", 0, "Kria K26C SOM", 0, false); // n (PAResourceAtoD.BoardChooser_BOARD_TABLE)
+// Elapsed time: 11 seconds
+selectButton("NEXT", "Next", "New Project"); // JButton (NEXT)
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// TclEventType: FLOW_ADDED
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_ADD
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_DASHBOARD_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_DASHBOARD_GADGET_NEW
+// TclEventType: PROJECT_DASHBOARD_GADGET_CHANGE
+// TclEventType: PROJECT_NEW
+// Tcl Message: create_project bw_estim . -part xck26-sfvc784-2LV-c 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified 
+// TclEventType: PROJECT_NEW
+// Tcl Message: INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/ip'. 
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// HMemoryUtils.trashcanNow. Engine heap size: 1,883 MB. GUI used memory: 72 MB. Current time: 11/6/25, 12:46:12 PM UTC
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// [Engine Memory]: 1,883 MB (+17255kb) [00:11:15]
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// TclEventType: BOARD_MODIFIED
+// Tcl Message: set_property board_part xilinx.com:k26c:part0:1.4 [current_project] 
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: add_files -scan_for_includes {/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dB_conversion.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_naive.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_right.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/linear_interpolation.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dsp48_mult.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_changes.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_optimized.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/streaming_dft_proc.sv} 
+// Elapsed time: 13 seconds
+selectButton("FINISH", "Finish", "New Project"); // JButton (FINISH)
+// 'g' command handler elapsed time: 647 seconds
+dismissDialog("Create Project"); // bh (Create Project Progress)
+dismissDialog("New Project"); // f (dialog0)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_GRAPH_STALE
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,930 MB. GUI used memory: 79 MB. Current time: 11/6/25, 12:46:27 PM UTC
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: update_compile_order -fileset sources_1 
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 20s
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge (find_bw_edge_left.sv)]", 9, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files]", 1); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, Non-module Files]", 1); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed time: 46 seconds
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Project Manager, Add Sources]", 2, false); // g (PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, Flow Navigator Tree)
+// Run Command: PAResourceCommand.PACommandNames_ADD_SOURCES
+// Elapsed time: 10 seconds
+selectRadioButton(PAResourceAtoD.AddSrcWizard_SPECIFY_SIMULATION_SPECIFIC_HDL_FILES, "Add or create simulation sources"); // a (PAResourceAtoD.AddSrcWizard_SPECIFY_SIMULATION_SPECIFIC_HDL_FILES)
+selectButton("NEXT", "Next", "Add Sources"); // JButton (NEXT)
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories", "Add Sources"); // a (PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES)
+setFolderChooser("/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb");
+// Elapsed time: 102 seconds
+selectButton(PAResourceQtoS.SrcChooserPanel_ADD_OR_CREATE_SOURCE_FILE, "Add", "Add Sources"); // C (PAResourceQtoS.SrcChooserPanel_ADD_OR_CREATE_SOURCE_FILE, Add)
+selectMenuItem(PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, "Add Directories..."); // aq (PAResourceQtoS.SrcChooserPanel_ADD_DIRECTORIES, Add Directories...)
+setFolderChooser("/home/bsc25h10/mdietz/bachelors_thesis/rtl/simvectors");
+selectButton("FINISH", "Finish", "Add Sources"); // JButton (FINISH)
+// 'f' command handler elapsed time: 137 seconds
+dismissDialog("Add Sources"); // c (dialog2)
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: set_property SOURCE_SET sources_1 [get_filesets sim_1] 
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Tcl Message: add_files -fileset sim_1 -scan_for_includes /home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv 
+dismissDialog("Add Simulation Sources"); // bh (Add Simulation Sources  Progress)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 03m:44s
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// HMemoryUtils.trashcanNow. Engine heap size: 1,970 MB. GUI used memory: 80 MB. Current time: 11/6/25, 12:49:57 PM UTC
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 03m:46s
+// Tcl Message: update_compile_order -fileset sim_1 
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 3); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 03m:48s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 03m:50s
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Constraints]", 7); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Constraints, constrs_1]", 8, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Non-module Files]", 11); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Utility Sources]", 20); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, Non-module Files]", 11); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 10); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Constraints]", 7); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 8); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 8); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1]", 9); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 8); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTab((HResource) null, (HResource) null, "Tcl Console", 0); // aa
+// Elapsed time: 16 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources]", 2); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed time: 20 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources]", 0); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv)]", 12); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+// Elapsed time: 83 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv)]", 12, true, false, false, false, true, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Popup Trigger - Node
+selectMenu(PAResourceCommand.PACommandNames_OPEN_FILE_WITH, "Open With"); // an (PAResourceCommand.PACommandNames_OPEN_FILE_WITH, Open With)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // an (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // an (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // an (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenu(PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, "Hierarchy Update"); // an (PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update)
+selectMenu(PAResourceQtoS.SrcMenu_IP_HIERARCHY, "IP Hierarchy"); // an (PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy)
+selectMenuItem(PAResourceCommand.PACommandNames_SET_AS_TOP, "Set as Top"); // aq (PAResourceCommand.PACommandNames_SET_AS_TOP, set_as_top_menu)
+// Run Command: PAResourceCommand.PACommandNames_SET_AS_TOP
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: set_property top find_bw_left_edge_tb [get_filesets sim_1] 
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// TclEventType: DG_GRAPH_STALE
+// Tcl Message: set_property top_lib xil_defaultlib [get_filesets sim_1] 
+// TclEventType: DG_GRAPH_STALE
+// [Engine Memory]: 1,979 MB (+1117kb) [00:18:02]
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 06m:48s
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 06m:50s
+// Tcl Message: update_compile_order -fileset sim_1 
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 06m:52s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 06m:54s
+// Elapsed time: 17 seconds
+selectTree(PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, "[, Simulation, Run Simulation]", 10, false); // g (PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, Flow Navigator Tree)
+selectMenuItem(PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, "Run Behavioral Simulation"); // aq (PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL, simulation_run_behavioral_menu)
+// Run Command: PAResourceCommand.PACommandNames_SIMULATION_RUN_BEHAVIORAL
+// TclEventType: LAUNCH_SIM
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: launch_simulation 
+// Tcl Message: Command: launch_simulation  
+// Tcl Message: xvlog --incr --relax -L uvm -prj find_bw_left_edge_tb_vlog.prj 
+// TclEventType: LAUNCH_SIM_LOG
+// Tcl Message: INFO: [USF-XSim-69] 'compile' step finished in '1' seconds INFO: [USF-XSim-3] XSim::Elaborate design INFO: [USF-XSim-61] Executing 'ELABORATE' step in '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim' 
+// Tcl Message: xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot find_bw_left_edge_tb_behav xil_defaultlib.find_bw_left_edge_tb xil_defaultlib.glbl -log elaborate.log 
+// TclEventType: LAUNCH_SIM
+// Tcl Message: INFO: [USF-XSim-69] 'elaborate' step finished in '1' seconds INFO: [USF-XSim-99] Step results log file:'/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim/elaborate.log' 
+// Tcl Message: ERROR: [USF-XSim-62] 'elaborate' step failed with error(s). Please check the Tcl console output or '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim/elaborate.log' file for more information. ERROR: [Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation. 
+// Tcl Message: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors. 
+// CommandFailedException: ERROR: [Common 17-69] Command failed: ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  
+// HOptionPane Error: 'ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.  (Run Simulation)'
+// HMemoryUtils.trashcanNow. Engine heap size: 2,000 MB. GUI used memory: 83 MB. Current time: 11/6/25, 12:53:22 PM UTC
+// 'd' command handler elapsed time: 6 seconds
+selectButton("OptionPane.button", "OK", "Run Simulation"); // JButton (OptionPane.button)
+selectList(PAResourceAtoD.CmdMsgDialog_MESSAGES, "[Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation.", 1); // b (PAResourceAtoD.CmdMsgDialog_MESSAGES)
+selectButton(PAResourceAtoD.CmdMsgDialog_OK, "OK", "Critical Messages"); // f (PAResourceAtoD.CmdMsgDialog_OK)
+dismissDialog("Critical Messages"); // a (dialog5)
+// Elapsed time: 116 seconds
+selectCodeEditor(RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR, 576, 123); // cD (RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR)
+typeControlKey(RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR, "RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR", 'c'); // cD (RDIResource.TclConsoleView_TCL_CONSOLE_CODE_EDITOR)
+// Elapsed time: 63 seconds
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv), dut : find_bw_left_edge (find_bw_edge_left.sv)]", 12, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv), dut : find_bw_left_edge (find_bw_edge_left.sv)]", 12, false); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv), dut : find_bw_left_edge (find_bw_edge_left.sv)]", 12, false, false, false, false, false, true); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Double Click
+// HMemoryUtils.trashcanNow. Engine heap size: 2,053 MB. GUI used memory: 84 MB. Current time: 11/6/25, 12:56:42 PM UTC
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv)]", 11, true); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Simulation Sources, sim_1, find_bw_left_edge_tb (find_bw_edge_left_tb.sv)]", 11, true, false, false, false, false, true); // E (PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE) - Double Click - Node
+// [Engine Memory]: 2,083 MB (+5527kb) [00:21:49]
+// Elapsed time: 12 seconds
+selectCodeEditor("find_bw_edge_left_tb.sv", 190, 52); // ae (find_bw_edge_left_tb.sv)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 11m:08s
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 11m:10s
+// HMemoryUtils.trashcanNow. Engine heap size: 2,111 MB. GUI used memory: 85 MB. Current time: 11/6/25, 12:57:22 PM UTC
+// Elapsed time: 25 seconds
+selectCodeEditor("find_bw_edge_left_tb.sv", 167, 66); // ae (find_bw_edge_left_tb.sv)
+// Elapsed time: 25 seconds
+selectCodeEditor("find_bw_edge_left_tb.sv", 111, 181); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 111, 193); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 117, 200); // ae (find_bw_edge_left_tb.sv)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 11m:54s
+selectCodeEditor("find_bw_edge_left_tb.sv", 295, 22); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 149, 175); // ae (find_bw_edge_left_tb.sv)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 11m:56s
+selectCodeEditor("find_bw_edge_left_tb.sv", 103, 189); // ae (find_bw_edge_left_tb.sv)
+// Elapsed time: 24 seconds
+selectCodeEditor("find_bw_edge_left_tb.sv", 174, 179); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 177, 192); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 322, 75); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 144, 205); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 144, 205, false, false, false, false, true); // ae (find_bw_edge_left_tb.sv) - Double Click
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+selectCodeEditor("find_bw_edge_left_tb.sv", 375, 177); // ae (find_bw_edge_left_tb.sv)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 12m:32s
+selectCodeEditor("find_bw_edge_left_tb.sv", 376, 173); // ae (find_bw_edge_left_tb.sv)
+selectCodeEditor("find_bw_edge_left_tb.sv", 213, 101); // ae (find_bw_edge_left_tb.sv)
+// Elapsed Time for: 'PAResourceItoN.MsgLongTask_MESSAGE_LONG_TASK/L.f': 12m:34s

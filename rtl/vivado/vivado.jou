@@ -1,0 +1,41 @@
+#-----------------------------------------------------------
+# Vivado v2024.2.2 (64-bit)
+# SW Build 6060944 on Thu Mar 06 19:10:09 MST 2025
+# IP Build 6050500 on Thu Mar  6 23:33:39 MST 2025
+# SharedData Build 6060542 on Thu Mar 06 10:31:07 MST 2025
+# Start of session at: Thu Nov  6 13:34:45 2025
+# Process ID         : 21411
+# Current directory  : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado
+# Command line       : vivado
+# Log file           : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.log
+# Journal file       : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.jou
+# Running On         : badile11.ee.ethz.ch
+# Platform           : CentOS
+# Operating System   : CentOS Linux release 7.9.2009 (Core)
+# Processor Detail   : AMD Ryzen 9 9900X 12-Core Processor
+# CPU Frequency      : 600.000 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 24
+# Host memory        : 66895 MB
+# Swap memory        : 53687 MB
+# Total Virtual      : 120582 MB
+# Available Virtual  : 118980 MB
+#-----------------------------------------------------------
+start_gui
+create_project bw_estim . -part xck26-sfvc784-2LV-c
+set_property board_part xilinx.com:k26c:part0:1.4 [current_project]
+add_files -scan_for_includes {/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dB_conversion.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_naive.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_right.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/linear_interpolation.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dsp48_mult.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_changes.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_optimized.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/streaming_dft_proc.sv}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+add_files -fileset sim_1 -scan_for_includes /home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top find_bw_left_edge_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation

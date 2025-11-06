@@ -1,0 +1,124 @@
+#-----------------------------------------------------------
+# Vivado v2024.2.2 (64-bit)
+# SW Build 6060944 on Thu Mar 06 19:10:09 MST 2025
+# IP Build 6050500 on Thu Mar  6 23:33:39 MST 2025
+# SharedData Build 6060542 on Thu Mar 06 10:31:07 MST 2025
+# Start of session at: Thu Nov  6 13:34:45 2025
+# Process ID         : 21411
+# Current directory  : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado
+# Command line       : vivado
+# Log file           : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.log
+# Journal file       : /home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/vivado.jou
+# Running On         : badile11.ee.ethz.ch
+# Platform           : CentOS
+# Operating System   : CentOS Linux release 7.9.2009 (Core)
+# Processor Detail   : AMD Ryzen 9 9900X 12-Core Processor
+# CPU Frequency      : 600.000 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 24
+# Host memory        : 66895 MB
+# Swap memory        : 53687 MB
+# Total Virtual      : 120582 MB
+# Available Virtual  : 118980 MB
+#-----------------------------------------------------------
+start_gui
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.0/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.1/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.0/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.1/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.0/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.1/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.0/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.1/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.0/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.1/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.0/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.1/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_a/1.1/board.xml as part xcve2802-vsvh1760-2lp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280_es_revb:part0:1.1 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/es/rev_b/1.1/board.xml as part xcve2802-vsvh1760-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+create_project bw_estim . -part xck26-sfvc784-2LV-c
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/usr/pack/vitis-2024.2-dz/Vivado/2024.2/data/ip'.
+set_property board_part xilinx.com:k26c:part0:1.4 [current_project]
+add_files -scan_for_includes {/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dB_conversion.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_naive.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_right.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/linear_interpolation.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dsp48_mult.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_changes.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/dft_accumulation_optimized.sv /home/bsc25h10/mdietz/bachelors_thesis/rtl/src/streaming_dft_proc.sv}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+add_files -fileset sim_1 -scan_for_includes /home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv
+update_compile_order -fileset sim_1
+set_property top find_bw_left_edge_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_compile_order -fileset sim_1
+launch_simulation
+Command: launch_simulation 
+INFO: [Vivado 12-12493] Simulation top is 'find_bw_left_edge_tb'
+INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-72] Using boost library from '/usr/pack/vitis-2024.2-dz/Vivado/2024.2/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'find_bw_left_edge_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim'
+xvlog --incr --relax -L uvm -prj find_bw_left_edge_tb_vlog.prj
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module find_bw_left_edge
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module find_bw_left_edge_tb
+WARNING: [VRFC 10-3824] variable 'n_errs' must explicitly be declared as automatic or static [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:67]
+WARNING: [VRFC 10-3824] variable 'test_count' must explicitly be declared as automatic or static [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:68]
+WARNING: [VRFC 10-3824] variable 'mismatch' must explicitly be declared as automatic or static [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:144]
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+Waiting for jobs to finish...
+No pending jobs, compilation finished.
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim'
+xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot find_bw_left_edge_tb_behav xil_defaultlib.find_bw_left_edge_tb xil_defaultlib.glbl -log elaborate.log
+Vivado Simulator v2024.2.2
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: /usr/pack/vitis-2024.2-dz/Vivado/2024.2/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot find_bw_left_edge_tb_behav xil_defaultlib.find_bw_left_edge_tb xil_defaultlib.glbl -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv" Line 1. Module find_bw_left_edge(ACCUM_WIDTH=18,FREQ_BIN_WIDTH=16,THRESHOLD_DB=7680,NUM_ACCUMS=24) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv" Line 1. Module find_bw_left_edge(ACCUM_WIDTH=18,FREQ_BIN_WIDTH=16,THRESHOLD_DB=7680,NUM_ACCUMS=24) doesn't have a timescale but at least one module in design has a timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+ERROR: [XSIM 43-3388] /usr/bin/gcc not found, please install GCC for your Linux distribution.
+ERROR: [XSIM 43-3915] Encountered a fatal error. Cannot continue. Exiting... 
+INFO: [USF-XSim-69] 'elaborate' step finished in '1' seconds
+INFO: [USF-XSim-99] Step results log file:'/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim/elaborate.log'
+ERROR: [USF-XSim-62] 'elaborate' step failed with error(s). Please check the Tcl console output or '/home/bsc25h10/mdietz/bachelors_thesis/rtl/vivado/bw_estim.sim/sim_1/behav/xsim/elaborate.log' file for more information.
+ERROR: [Vivado 12-4473] Detected error while running simulation. Please correct the issue and retry this operation.
+ERROR: [Common 17-39] 'launch_simulation' failed due to earlier errors.
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
+WARNING: [filemgmt 56-199] Attempt to get parsing info during refresh. "On-the-fly" syntax checking information may be incorrect. [/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv:]
