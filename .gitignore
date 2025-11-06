@@ -7,3 +7,10 @@ simulator/src/ancient
 # Ignore macOS metadata files
 **/.DS_Store
 
+# temporary vivado files
+*.sim/
+*.chache/
+*.log
+*.jou
+*.str
+*.pb
