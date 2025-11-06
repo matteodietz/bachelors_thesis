@@ -77,20 +77,35 @@ if __name__ == '__main__':
     s_fine_right = np.linspace(half_bw_est -delta_f, half_bw_est + delta_f, 8) 
     S_bins = np.unique(np.concatenate([s_coarse, s_fine_left, s_fine_right]))
 
+    print(f"Bins to calculate: {S_bins}")
+
     threshold_db = -30
 
     # --- 5. Run the Modular Processing Pipeline ---
     # Step 1: Core Streaming Processor
     dft_bins = streaming_dft_processor(time_window_data, fs_baseline, S_bins, window='hann')
-    
+
     # Step 2: Power Conversion and Sorting
     freqs_sorted, power_db_norm_sorted = convert_to_sorted_db_power(dft_bins)
     
     # Step 3: Find Left Edge Points
-    f1_left, f2_left, L1_left, L2_left = find_left_edge_points(freqs_sorted, power_db_norm_sorted, threshold_db=threshold_db)
+    f1_left, f2_left, L1_left, L2_left = find_left_edge_points(freqs_sorted, power_db_norm_sorted,  threshold_db=threshold_db)
     
     # Step 4: Find Right Edge Points
-    f1_right, f2_right, L1_right, L2_right = find_right_edge_points(freqs_sorted, power_db_norm_sorted, threshold_db=threshold_db)
+    f1_right, f2_right, L1_right, L2_right = find_right_edge_points(freqs_sorted, power_db_norm_sorted,  threshold_db=threshold_db)
+    
+    # # Step 2: Power Conversion and Sorting
+    # freqs_sorted, power_db_norm_sorted, bin_indices_sorted = convert_to_sorted_db_power(dft_bins)
+    
+    # # Step 3: Find Left Edge Points
+    # f1_left, f2_left, L1_left, L2_left, k1_left, k2_left = find_left_edge_points(freqs_sorted, power_db_norm_sorted, bin_indices_sorted, threshold_db=threshold_db)
+
+    # print(f" LEFT EDGE: f1 = {f1_left}, f2 = {f2_left}, k1 = {k1_left}, k2 = {k2_left}")
+    
+    # # Step 4: Find Right Edge Points
+    # f1_right, f2_right, L1_right, L2_right, k1_right, k2_right = find_right_edge_points(freqs_sorted, power_db_norm_sorted, bin_indices_sorted, threshold_db=threshold_db)
+
+    # print(f" RIGHT EDGE: f1 = {f1_right}, f2 = {f2_right}, k1 = {k1_right}, k2 = {k2_right}")
 
     # Step 5: Interpolate to find final edges
     f_left_final = linear_interpolate_crossing(f1_left, f2_left, L1_left, L2_left, threshold_db=threshold_db)
@@ -119,7 +134,9 @@ if __name__ == '__main__':
     enbw_scaling = fs_baseline * np.sum(win**2)
     
     freqs1 = np.array(list(dft_bins.keys()))
+    # freqs1 = np.array([res['freq_hz'] for res in dft_bins])
     powers1 = np.abs(np.array(list(dft_bins.values())))**2
+    # powers1 = np.array([res['accumulator'] for res in dft_bins])**2
     psd1 = powers1 / enbw_scaling
     db1 = 10 * np.log10(psd1 + 1e-20)
     

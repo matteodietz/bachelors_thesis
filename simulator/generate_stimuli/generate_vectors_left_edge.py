@@ -80,32 +80,25 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, threshold_db,
     print(f"Golden model results:")
     print(f"  Number of frequency bins: {len(freqs_sorted)}")
     print(f"  Frequency range: [{freqs_sorted[0]/1e6:.3f}, {freqs_sorted[-1]/1e6:.3f}] MHz")
-    
-    # Find indices in sorted array
-    idx1_golden = None
-    idx2_golden = None
-    if f1_golden is not None and f2_golden is not None:
-        # Find which indices these frequencies correspond to
-        idx1_golden = np.where(np.abs(freqs_sorted - f1_golden) < 1e-6)[0]
-        idx2_golden = np.where(np.abs(freqs_sorted - f2_golden) < 1e-6)[0]
-        
-        # Check if we found the indices
-        if len(idx1_golden) > 0 and len(idx2_golden) > 0:
-            idx1_golden = idx1_golden[0]
-            idx2_golden = idx2_golden[0]
-            print(f"  Crossing between indices: idx1={idx1_golden}, idx2={idx2_golden}")
-            print(f"  f1 = {f1_golden/1e6:.6f} MHz (idx {idx1_golden}), f2 = {f2_golden/1e6:.6f} MHz (idx {idx2_golden})")
-            print(f"  L1 = {L1_golden:.3f} dB, L2 = {L2_golden:.3f} dB")
-        else:
-            print(f"  Warning: Could not find indices for frequencies!")
-            idx1_golden = None
-            idx2_golden = None
+    if f1_golden is not None:
+        print(f"  f1 = {f1_golden/1e6:.6f} MHz, f2 = {f2_golden/1e6:.6f} MHz")
+        print(f"  L1 = {L1_golden:.3f} dB, L2 = {L2_golden:.3f} dB")
+        print(f"  Bandwidth edge at: {f1_golden/1e6:.6f} MHz (between f1 and f2)")
     else:
         print(f"  No crossing found!")
     
     # Convert to fixed point for hardware
-    # Store actual frequencies for reference (but not used by edge finder hardware)
-    freq_bins_mhz = [f / 1e6 for f in freqs_sorted]
+    # Frequency bins: represent in MHz as signed fixed-point Q(freq_bin_width-6).6 format
+    # This gives us range of +/- 8 MHz (for 9-bit width) with 6 fractional bits (0.015625 MHz resolution)
+    freq_frac_bits = 6
+    freq_int_bits = freq_bin_width - freq_frac_bits
+    
+    # For frequencies, we need two's complement representation
+    freq_bins_hw = []
+    for f in freqs_sorted:
+        f_mhz = f / 1e6
+        fixed_val = float_to_fixed_point(f_mhz, freq_int_bits, freq_frac_bits, signed=True)
+        freq_bins_hw.append(fixed_val)
     
     # Power values: already in dB, use Q(accum_width-8).8 format (8 fractional bits)
     power_frac_bits = 8
@@ -113,31 +106,30 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, threshold_db,
     power_db_hw = [float_to_fixed_point(p, power_int_bits, power_frac_bits, signed=True) 
                    for p in power_db_norm_sorted]
     
-    # Expected outputs - just the indices!
-    idx1_hw = int(idx1_golden) if idx1_golden is not None else 0
-    idx2_hw = int(idx2_golden) if idx2_golden is not None else 0
+    # Expected outputs - frequencies in MHz (already in two's complement from float_to_fixed_point)
+    f1_hw = float_to_fixed_point(f1_golden / 1e6, freq_int_bits, freq_frac_bits, signed=True) if f1_golden is not None else 0
+    f2_hw = float_to_fixed_point(f2_golden / 1e6, freq_int_bits, freq_frac_bits, signed=True) if f2_golden is not None else 0
     L1_hw = float_to_fixed_point(L1_golden, power_int_bits, power_frac_bits, signed=True) if L1_golden is not None else 0
     L2_hw = float_to_fixed_point(L2_golden, power_int_bits, power_frac_bits, signed=True) if L2_golden is not None else 0
     
-    valid = 1 if all(v is not None for v in [idx1_golden, idx2_golden, L1_golden, L2_golden]) else 0
+    valid = 1 if all(v is not None for v in [f1_golden, f2_golden, L1_golden, L2_golden]) else 0
     
     return {
         'test_name': test_name,
         'num_accums': len(freqs_sorted),
+        'freq_bins': freq_bins_hw,
         'power_db': power_db_hw,
         'threshold_db': threshold_db,
-        'expected_idx1': idx1_hw,
-        'expected_idx2': idx2_hw,
+        'expected_f1': f1_hw,
+        'expected_f2': f2_hw,
         'expected_L1': L1_hw,
         'expected_L2': L2_hw,
         'expected_valid': valid,
-        'freq_bins_mhz': freq_bins_mhz,  # For reference only
+        # 'freq_resolution': freq_resolution,
         'golden_f1': f1_golden,
         'golden_f2': f2_golden,
         'golden_L1': L1_golden,
-        'golden_L2': L2_golden,
-        'golden_idx1': idx1_golden,
-        'golden_idx2': idx2_golden
+        'golden_L2': L2_golden
     }
 
 def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
@@ -148,22 +140,21 @@ def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
         # Write header with metadata
         f.write("# Simulation vectors for find_bw_left_edge.sv\n")
         f.write(f"# ACCUM_WIDTH = {accum_width}\n")
-        f.write(f"# FREQ_BIN_WIDTH = {freq_bin_width} (for index representation)\n")
+        f.write(f"# FREQ_BIN_WIDTH = {freq_bin_width}\n")
         f.write("#\n")
+        f.write("# Frequency representation: Q{}.{} fixed-point in MHz\n".format(
+            freq_bin_width - 6, 6))
         f.write("# Power representation: Q{}.{} fixed-point in dB\n".format(
             accum_width - 8, 8))
-        f.write("#\n")
-        f.write("# Hardware works with INDICES into the sorted frequency array\n")
-        f.write("# The actual frequencies are provided for reference only\n")
         f.write("#\n")
         f.write("# Format per test case:\n")
         f.write("# TEST_NAME <n>\n")
         f.write("# NUM_ACCUMS <n>\n")
         f.write("# THRESHOLD_DB <value>\n")
-        f.write("# FREQ_BINS_MHZ <n values> (reference only, not used by hardware)\n")
+        f.write("# FREQ_BINS <n values in hex> (frequencies in MHz)\n")
         f.write("# POWER_DB <n values in hex> (power in dB normalized)\n")
-        f.write("# EXPECTED idx1 idx2 L1 L2 valid\n")
-        f.write("# GOLDEN f1_MHz f2_MHz L1_dB L2_dB idx1 idx2\n")
+        f.write("# EXPECTED f1 f2 L1 L2 valid (all in hex)\n")
+        f.write("# GOLDEN f1 f2 L1 L2 (floating point in MHz and dB for reference)\n")
         f.write("#\n\n")
         
         for tc in test_cases:
@@ -171,10 +162,10 @@ def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
             f.write(f"NUM_ACCUMS {tc['num_accums']}\n")
             f.write(f"THRESHOLD_DB {tc['threshold_db']}\n")
             
-            # Write frequency bins in MHz (for human reference only)
-            f.write("FREQ_BINS_MHZ")
-            for freq_mhz in tc['freq_bins_mhz']:
-                f.write(f" {freq_mhz:.6f}")
+            # Write frequency bins (in MHz as fixed-point)
+            f.write("FREQ_BINS")
+            for fb in tc['freq_bins']:
+                f.write(f" {fb:03x}")
             f.write("\n")
             
             # Write power values
@@ -183,20 +174,16 @@ def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
                 f.write(f" {p:04x}")
             f.write("\n")
             
-            # Write expected outputs (indices and power values)
-            f.write(f"EXPECTED {tc['expected_idx1']:02x} {tc['expected_idx2']:02x} {tc['expected_L1']:04x} "
+            # Write expected outputs (frequencies in MHz, powers in dB)
+            f.write(f"EXPECTED {tc['expected_f1']:03x} {tc['expected_f2']:03x} {tc['expected_L1']:04x} "
                    f"{tc['expected_L2']:04x} {tc['expected_valid']}\n")
             
-            # Write golden reference (for debugging)
-            if tc['golden_idx1'] is not None:
-                f1_mhz = tc['golden_f1']/1e6 if tc['golden_f1'] is not None else float('nan')
-                f2_mhz = tc['golden_f2']/1e6 if tc['golden_f2'] is not None else float('nan')
-                l1_db = tc['golden_L1'] if tc['golden_L1'] is not None else float('nan')
-                l2_db = tc['golden_L2'] if tc['golden_L2'] is not None else float('nan')
-                f.write(f"GOLDEN {f1_mhz:.6f} {f2_mhz:.6f} "
-                       f"{l1_db:.6f} {l2_db:.6f} {tc['golden_idx1']} {tc['golden_idx2']}\n")
+            # Write golden reference (for debugging) - convert Hz to MHz
+            if tc['golden_f1'] is not None:
+                f.write(f"GOLDEN {tc['golden_f1']/1e6:.6f} {tc['golden_f2']/1e6:.6f} "
+                       f"{tc['golden_L1']:.6f} {tc['golden_L2']:.6f}\n")
             else:
-                f.write(f"GOLDEN nan nan nan nan -1 -1\n")
+                f.write(f"GOLDEN nan nan nan nan\n")
             
             f.write("\n")  # Blank line between test cases
 
@@ -207,8 +194,8 @@ def main():
     print("=== Generating Simulation Vectors for find_bw_left_edge.sv ===\n")
     
     # Hardware parameters
-    ACCUM_WIDTH = 16
-    FREQ_BIN_WIDTH = 9
+    ACCUM_WIDTH = 48
+    FREQ_BIN_WIDTH = 24
     NUM_ACCUMS = 24  # Maximum, actual may vary per test
     
     test_cases = []
@@ -257,7 +244,8 @@ def main():
             test_configs = [
                 ("picmus_ch64_win29", 64, 29),
                 ("picmus_ch64_win15", 64, 15),
-                ("picmus_ch64_win50", 64, 50),
+                ("picmus_ch64_win27", 64, 27),
+                ("picmus_ch64_win31", 64, 31),
                 ("picmus_ch32_win29", 32, 29),
                 ("picmus_ch96_win29", 96, 29),
             ]
