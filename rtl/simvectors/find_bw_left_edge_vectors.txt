@@ -1,9 +1,9 @@
 # Simulation vectors for find_bw_left_edge.sv
-# ACCUM_WIDTH = 48
-# FREQ_BIN_WIDTH = 24
+# ACCUM_WIDTH = 18
+# FREQ_BIN_WIDTH = 16
 #
-# Frequency representation: Q18.6 fixed-point in MHz
-# Power representation: Q40.8 fixed-point in dB
+# Frequency representation: Q10.6 fixed-point in MHz
+# Power representation: Q10.8 fixed-point in dB
 #
 # Format per test case:
 # TEST_NAME <n>
@@ -15,75 +15,75 @@
 # GOLDEN f1 f2 L1 L2 (floating point in MHz and dB for reference)
 #
 
-TEST_NAME picmus_ch64_win29
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffffa9af ffffffffb3a2 ffffffffc482 ffffffffcc6a ffffffffcd79 ffffffffcecb ffffffffd6d8 ffffffffd4bd ffffffffe803 ffffffffeb3e fffffffff1d2 fffffffff9f1 0000 ffffffffede0 ffffffffdfbd ffffffffcbd3 ffffffffcb49 ffffffffccaf ffffffffc37e ffffffffc644 ffffffffb779 ffffffffc154 ffffffffaf4a ffffffff9dee
-EXPECTED ffff60 ffff65 ffffffffd4bd ffffffffe803 1
+picmus_ch64_win29
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3a9af 3b3a2 3c482 3cc6a 3cd79 3cecb 3d6d8 3d4bd 3e803 3eb3e 3f1d2 3f9f1 0000 3ede0 3dfbd 3cbd3 3cb49 3ccaf 3c37e 3c644 3b779 3c154 3af4a 39dee 
+d80d d931 3d4bd 3e803 1
 GOLDEN -2.496857 -2.425428 -43.260140 -23.987232
 
-TEST_NAME picmus_ch64_win15
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffff991d ffffffffa429 ffffffffad1e ffffffffb1da ffffffffb2d7 ffffffffb2bf ffffffffbb5c ffffffffbaeb ffffffffcabb ffffffffd402 ffffffffd788 0000 ffffffffecc1 ffffffffd0b0 ffffffffc8d9 ffffffffb92f ffffffffb9f0 ffffffffb027 ffffffffad1b ffffffffaa40 ffffffffa43a ffffffffa62d ffffffff9d9c ffffffff98eb
-EXPECTED ffff71 ffffd0 ffffffffd788 0000 1
+picmus_ch64_win15
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3991d 3a429 3ad1e 3b1da 3b2d7 3b2bf 3bb5c 3baeb 3cabb 3d402 3d788 0000 3ecc1 3d0b0 3c8d9 3b92f 3b9f0 3b027 3ad1b 3aa40 3a43a 3a62d 39d9c 398eb 
+dc4a f419 3d788 0000 1
 GOLDEN -2.232000 -0.744000 -40.467124 0.000000
 
-TEST_NAME picmus_ch64_win27
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffffa7b2 ffffffffb792 ffffffffc83c ffffffffc4ff ffffffffcc2b ffffffffcd9d ffffffffd109 ffffffffd9b9 ffffffffe496 ffffffffea73 ffffffffe8f3 0000 fffffffff831 ffffffffec9f ffffffffd81b ffffffffd348 ffffffffcc24 ffffffffc570 ffffffffbc7a ffffffffbd27 ffffffffbced ffffffffaf32 ffffffff9685 ffffffff9a0e
-EXPECTED ffff60 ffff65 ffffffffd9b9 ffffffffe496 1
+picmus_ch64_win27
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3a7b2 3b792 3c83c 3c4ff 3cc2b 3cd9d 3d109 3d9b9 3e496 3ea73 3e8f3 0000 3f831 3ec9f 3d81b 3d348 3cc24 3c570 3bc7a 3bd27 3bced 3af32 39685 39a0e 
+d80d d931 3d9b9 3e496 1
 GOLDEN -2.496857 -2.425428 -38.278092 -27.414271
 
-TEST_NAME picmus_ch64_win31
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffffae90 ffffffffbe24 ffffffffcd57 ffffffffc3a6 ffffffffd2d6 ffffffffc921 ffffffffdc52 ffffffffdf03 ffffffffeee8 fffffffff832 0000 ffffffffff12 fffffffffaf9 ffffffffeabf ffffffffebe7 ffffffffddbd ffffffffe13e ffffffffd304 ffffffffd681 ffffffffc5af ffffffffcf77 ffffffffcafe ffffffffbc2f ffffffffaec8
-EXPECTED ffff60 ffff65 ffffffffdf03 ffffffffeee8 1
+picmus_ch64_win31
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3ae90 3be24 3cd57 3c3a6 3d2d6 3c921 3dc52 3df03 3eee8 3f832 0000 3ff12 3faf9 3eabf 3ebe7 3ddbd 3e13e 3d304 3d681 3c5af 3cf77 3cafe 3bc2f 3aec8 
+d80d d931 3df03 3eee8 1
 GOLDEN -2.496857 -2.425428 -32.987659 -17.093632
 
-TEST_NAME picmus_ch32_win29
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffffa138 ffffffffb2d8 ffffffffc7d3 ffffffffc763 ffffffffd079 ffffffffba43 ffffffffd8db ffffffffdeb7 ffffffffeb56 ffffffffef8b fffffffff54f 0000 fffffffffa18 ffffffffef81 ffffffffe7ab ffffffffe00a ffffffffd228 ffffffffd199 ffffffffc29d ffffffffc79a ffffffffc3b0 ffffffffbda6 ffffffffa96d ffffffffa1f3
-EXPECTED ffff60 ffff65 ffffffffdeb7 ffffffffeb56 1
+picmus_ch32_win29
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3a138 3b2d8 3c7d3 3c763 3d079 3ba43 3d8db 3deb7 3eb56 3ef8b 3f54f 0000 3fa18 3ef81 3e7ab 3e00a 3d228 3d199 3c29d 3c79a 3c3b0 3bda6 3a96d 3a1f3 
+d80d d931 3deb7 3eb56 1
 GOLDEN -2.496857 -2.425428 -33.284675 -20.662397
 
-TEST_NAME picmus_ch96_win29
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffeb3 ffff12 ffff49 ffff4e ffff52 ffff57 ffff5c ffff60 ffff65 ffff69 ffff71 ffffd0 030 08f 097 09b 0a0 0a4 0a9 0ae 0b2 0b7 0ee 14d
-POWER_DB ffffffffa632 ffffffffb77d ffffffffc522 ffffffffc2b4 ffffffffca56 ffffffffc386 ffffffffd2da ffffffffd70a ffffffffe834 ffffffffefec fffffffff11b 0000 fffffffff630 fffffffff52e ffffffffe1b5 ffffffffdfbb ffffffffd79a ffffffffcd98 ffffffffc8d6 ffffffffc716 ffffffffbb74 ffffffffc258 ffffffffb044 ffffffffa492
-EXPECTED ffff60 ffff65 ffffffffd70a ffffffffe834 1
+picmus_ch96_win29
+24
+-30
+acac c47b d256 d37b d49f d5c4 d6e8 d80d d931 da56 dc4a f419 be7 23b6 25aa 26cf 27f3 2918 2a3c 2b61 2c85 2daa 3b85 5354 
+3a632 3b77d 3c522 3c2b4 3ca56 3c386 3d2da 3d70a 3e834 3efec 3f11b 0000 3f630 3f52e 3e1b5 3dfbb 3d79a 3cd98 3c8d6 3c716 3bb74 3c258 3b044 3a492 
+d80d d931 3d70a 3e834 1
 GOLDEN -2.496857 -2.425428 -40.961620 -23.798771
 
-TEST_NAME synth_centered_gaussian
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffe0c fffe9b fffef6 fffefb fffeff ffff04 ffff08 ffff0d ffff11 ffff16 ffff2a ffffb9 047 0d6 0ea 0ef 0f3 0f8 0fc 101 105 10a 165 1f4
-POWER_DB ffffffffa0dc ffffffffdb5a ffffffffd474 ffffffffe595 ffffffffddb0 ffffffffe48d ffffffffe519 ffffffffdee8 ffffffffe7fc ffffffffd861 ffffffffea9c 0000 0000 ffffffffea9c ffffffffd861 ffffffffe7fc ffffffffdee8 ffffffffe519 ffffffffe48d ffffffffddb0 ffffffffe595 ffffffffd474 ffffffffdb5a ffffffffa0dc
-EXPECTED fffef6 fffefb ffffffffd474 ffffffffe595 1
+synth_centered_gaussian
+24
+-30
+8300 a6b7 bd80 bea5 bfc9 c0ee c212 c337 c45b c580 ca6e ee25 11db 3592 3a80 3ba5 3cc9 3dee 3f12 4037 415b 4280 5949 7d00 
+3a0dc 3db5a 3d474 3e595 3ddb0 3e48d 3e519 3dee8 3e7fc 3d861 3ea9c 0000 0000 3ea9c 3d861 3e7fc 3dee8 3e519 3e48d 3ddb0 3e595 3d474 3db5a 3a0dc 
+bd80 bea5 3d474 3e595 1
 GOLDEN -4.156250 -4.084821 -43.546455 -26.417980
 
-TEST_NAME synth_wide_bandwidth
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffe0c fffe9b fffef6 fffefb fffeff ffff04 ffff08 ffff0d ffff11 ffff16 ffff2a ffffb9 047 0d6 0ea 0ef 0f3 0f8 0fc 101 105 10a 165 1f4
-POWER_DB ffffffff9b78 ffffffffab06 ffffffffbab3 ffffffffbc0c ffffffffbd0d ffffffffbe51 ffffffffbf9c ffffffffc0d0 ffffffffc24f ffffffffc39c ffffffffca89 0000 ffffffffffd2 ffffffffca10 ffffffffc337 ffffffffc1e5 ffffffffc084 ffffffffbf2d ffffffffbe10 ffffffffbcac ffffffffbbbe ffffffffba75 ffffffffaa6e ffffffff9b63
-EXPECTED ffff2a ffffb9 ffffffffca89 0000 1
+synth_wide_bandwidth
+24
+-30
+8300 a6b7 bd80 bea5 bfc9 c0ee c212 c337 c45b c580 ca6e ee25 11db 3592 3a80 3ba5 3cc9 3dee 3f12 4037 415b 4280 5949 7d00 
+39b78 3ab06 3bab3 3bc0c 3bd0d 3be51 3bf9c 3c0d0 3c24f 3c39c 3ca89 0000 3ffd2 3ca10 3c337 3c1e5 3c084 3bf2d 3be10 3bcac 3bbbe 3ba75 3aa6e 39b63 
+ca6e ee25 3ca89 0000 1
 GOLDEN -3.348214 -1.116071 -53.464324 0.000000
 
-TEST_NAME synth_narrow_bandwidth
-NUM_ACCUMS 24
-THRESHOLD_DB -30
-FREQ_BINS fffe0c fffe9b fffef6 fffefb fffeff ffff04 ffff08 ffff0d ffff11 ffff16 ffff2a ffffb9 047 0d6 0ea 0ef 0f3 0f8 0fc 101 105 10a 165 1f4
-POWER_DB ffffffff8499 ffffffffdb07 ffffffffd46a ffffffffe548 ffffffffdd48 ffffffffe448 ffffffffe4c3 ffffffffdeb5 ffffffffe7ad ffffffffd7c9 ffffffffea51 0000 0000 ffffffffea51 ffffffffd7c9 ffffffffe7ad ffffffffdeb5 ffffffffe4c3 ffffffffe448 ffffffffdd48 ffffffffe548 ffffffffd46a ffffffffdb07 ffffffff8499
-EXPECTED fffef6 fffefb ffffffffd46a ffffffffe548 1
+synth_narrow_bandwidth
+24
+-30
+8300 a6b7 bd80 bea5 bfc9 c0ee c212 c337 c45b c580 ca6e ee25 11db 3592 3a80 3ba5 3cc9 3dee 3f12 4037 415b 4280 5949 7d00 
+38499 3db07 3d46a 3e548 3dd48 3e448 3e4c3 3deb5 3e7ad 3d7c9 3ea51 0000 0000 3ea51 3d7c9 3e7ad 3deb5 3e4c3 3e448 3dd48 3e548 3d46a 3db07 38499 
+bd80 bea5 3d46a 3e548 1
 GOLDEN -4.156250 -4.084821 -43.587234 -26.717506
 

@@ -58,6 +58,26 @@ def float_to_fixed_point(value, int_bits, frac_bits, signed=True):
     
     return fixed_val
 
+def fixed_point_to_float(fixed_val, total_bits, frac_bits, signed=True):
+    """
+    Convert a fixed-point integer (potentially in unsigned two's complement format)
+    back to a floating point number.
+    """
+    if not signed:
+        return float(fixed_val) / (2**frac_bits)
+
+    # Determine the sign bit
+    sign_bit_mask = 1 << (total_bits - 1)
+    
+    # If the sign bit is set, it's a negative number
+    if (fixed_val & sign_bit_mask):
+        # Convert from two's complement to negative integer
+        signed_int = fixed_val - (1 << total_bits)
+    else:
+        signed_int = fixed_val
+        
+    return float(signed_int) / (2**frac_bits)
+
 def generate_test_case(test_name, iq_data, fs, freq_bins, threshold_db, 
                        accum_width, freq_bin_width, num_accums):
     """
@@ -90,7 +110,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, threshold_db,
     # Convert to fixed point for hardware
     # Frequency bins: represent in MHz as signed fixed-point Q(freq_bin_width-6).6 format
     # This gives us range of +/- 8 MHz (for 9-bit width) with 6 fractional bits (0.015625 MHz resolution)
-    freq_frac_bits = 6
+    freq_frac_bits = 12
     freq_int_bits = freq_bin_width - freq_frac_bits
     
     # For frequencies, we need two's complement representation
@@ -158,30 +178,30 @@ def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
         f.write("#\n\n")
         
         for tc in test_cases:
-            f.write(f"TEST_NAME {tc['test_name']}\n")
-            f.write(f"NUM_ACCUMS {tc['num_accums']}\n")
-            f.write(f"THRESHOLD_DB {tc['threshold_db']}\n")
+            f.write(f"{tc['test_name']}\n")         # TEST NAME
+            f.write(f"{tc['num_accums']}\n")        # NUM ACCUMS
+            f.write(f"{tc['threshold_db']}\n")      # THRESHOLD DB
             
             # Write frequency bins (in MHz as fixed-point)
-            f.write("FREQ_BINS")
+            # f.write("FREQ_BINS")                  # FREQ BINS
             for fb in tc['freq_bins']:
-                f.write(f" {fb:03x}")
+                f.write(f"{fb:03x} ")
             f.write("\n")
             
             # Write power values
-            f.write("POWER_DB")
+            # f.write("POWER_DB")                   # POWER DB
             for p in tc['power_db']:
-                f.write(f" {p:04x}")
+                f.write(f"{p:04x} ")
             f.write("\n")
             
             # Write expected outputs (frequencies in MHz, powers in dB)
-            f.write(f"EXPECTED {tc['expected_f1']:03x} {tc['expected_f2']:03x} {tc['expected_L1']:04x} "
-                   f"{tc['expected_L2']:04x} {tc['expected_valid']}\n")
+            f.write(f"{tc['expected_f1']:03x} {tc['expected_f2']:03x} {tc['expected_L1']:04x} "
+                   f"{tc['expected_L2']:04x} {tc['expected_valid']}\n") # EXPECTED
             
             # Write golden reference (for debugging) - convert Hz to MHz
             if tc['golden_f1'] is not None:
                 f.write(f"GOLDEN {tc['golden_f1']/1e6:.6f} {tc['golden_f2']/1e6:.6f} "
-                       f"{tc['golden_L1']:.6f} {tc['golden_L2']:.6f}\n")
+                       f"{tc['golden_L1']:.6f} {tc['golden_L2']:.6f}\n") # GOLDEN
             else:
                 f.write(f"GOLDEN nan nan nan nan\n")
             
@@ -194,9 +214,9 @@ def main():
     print("=== Generating Simulation Vectors for find_bw_left_edge.sv ===\n")
     
     # Hardware parameters
-    ACCUM_WIDTH = 48
-    FREQ_BIN_WIDTH = 24
-    NUM_ACCUMS = 24  # Maximum, actual may vary per test
+    ACCUM_WIDTH = 18
+    FREQ_BIN_WIDTH = 16
+    NUM_ACCUMS = 24  # max, actual varies per test
     
     test_cases = []
     
