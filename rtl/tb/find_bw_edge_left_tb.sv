@@ -5,11 +5,11 @@ module find_bw_left_edge_tb ();
 
     // --- Parameters (MUST match DUT and Python generator) ---
     localparam time CLK_PERIOD         = 10ns;
-    localparam unsigned RST_CLK_CYCLES = 10;
+    localparam unsigned RST_CLK_CYCLES = 5;
     
-    localparam unsigned ACCUM_WIDTH    = 18; // As per Python script
-    localparam unsigned FREQ_BIN_WIDTH = 16; // As per Python script
-    localparam unsigned NUM_ACCUMS     = 24; // As per Python script
+    localparam integer ACCUM_WIDTH    = 18; // As per Python script
+    localparam integer FREQ_BIN_WIDTH = 16; // As per Python script
+    localparam integer NUM_ACCUMS     = 24; // As per Python script
 
     // --- Signals ---
     logic clk;
@@ -17,31 +17,23 @@ module find_bw_left_edge_tb ();
     logic start;
     
     logic signed [ACCUM_WIDTH-1:0]   accum_vals[NUM_ACCUMS];
-    logic signed [FREQ_BIN_WIDTH-1:0] freq_bins[NUM_ACCUMS];
+    logic        [FREQ_BIN_WIDTH-1:0] freq_bins[NUM_ACCUMS];
     
-    logic signed [FREQ_BIN_WIDTH-1:0] act_f1, act_f2;
+    logic        [FREQ_BIN_WIDTH-1:0] act_f1, act_f2;
     logic signed [ACCUM_WIDTH-1:0]   act_L1, act_L2;
     logic                           act_valid;
     logic                           act_busy;
 
-    // // --- Clock and Reset Generation ---
-    // initial begin
-    //     clk = 0;
-    //     forever #(CLK_PERIOD/2) clk = ~clk;
-    // end
-    // initial begin
-    //     rst_n = 1'b0;
-    //     repeat(RST_CLK_CYCLES) @(posedge clk);
-    //     rst_n = 1'b1;
-    // end
-
-    clk_rst_gen #(
-        .ClkPeriod   (CLK_PERIOD),
-        .RstClkCycles(RST_CLK_CYCLES)
-    ) i_clk_rst_gen (
-        .clk_o (clk),
-        .rst_no(rst_n)
-    );
+    // --- Clock and Reset Generation ---
+    initial begin
+        clk = 0;
+        forever #(CLK_PERIOD/2) clk = ~clk;
+    end
+    initial begin
+        rst_n = 1'b0;
+        repeat(RST_CLK_CYCLES) @(posedge clk);
+        rst_n = 1'b1;
+    end
 
     // --- DUT Instantiation ---
     find_bw_left_edge #(
@@ -72,24 +64,22 @@ module find_bw_left_edge_tb ();
         string  test_name, golden_line;
         integer num_accums_read;
         integer threshold_read;
-        integer n_errs = 0;
-        integer test_count = 0;
+        static integer n_errs = 0;
+        static integer test_count = 0;
         
         logic [FREQ_BIN_WIDTH-1:0] exp_f1, exp_f2;
         logic [ACCUM_WIDTH-1:0]   exp_L1, exp_L2;
         logic                         exp_valid;
 
-        wait (rst_n);
-
         // Open the vector file
-        file = $fopen("find_bw_left_edge_vectors.txt", "r");
+        file = $fopen("/home/bsc25h10/mdietz/bachelors_thesis/rtl/simvectors/find_bw_left_edge_vectors.txt", "r");
         if (file == 0) begin
             $display("ERROR: Could not open vector file.");
             $stop;
         end
 
         // Skip header lines
-        for (int i = 0; i < 15; i++) begin      // maybe needs to be 16
+        for (int i = 0; i < 17; i++) begin
             $fgets(golden_line, file);
         end
 
@@ -101,7 +91,9 @@ module find_bw_left_edge_tb ();
                 $display("\n--- Starting Test Case: %s ---", test_name);
                 
                 $fscanf(file, "%d\n", num_accums_read); // Read NUM_ACCUMS
-                $fscanf(file, "%h\n", threshold_read); // Read THRESHOLD_DB
+                $fscanf(file, "%d\n", threshold_read); // Read THRESHOLD_DB
+                $display("\nNUM ACCUMS: %d", num_accums_read);
+                $display("\nTHRESHOLD DB: %d", threshold_read);
                 
                 // Read FREQ_BINS
                 for (int i = 0; i < num_accums_read; i++) $fscanf(file, "%h", freq_bins[i]);
@@ -118,6 +110,7 @@ module find_bw_left_edge_tb ();
                 $fgets(golden_line, file); // Consume blank line
                 
                 // --- Drive DUT and Check ---
+                wait(rst_n);
                 start = 1'b1;
                 @(posedge clk);
                 start = 1'b0;
@@ -151,7 +144,7 @@ module find_bw_left_edge_tb ();
         input logic                         expected_valid,
         inout integer                       error_count
     );
-        logic mismatch = 1'b0;
+        automatic logic mismatch = 1'b0;
         if (act_f1 !== expected_f1) begin
             $display("ERROR: f1 mismatch. Expected: %h, Got: %h", expected_f1, act_f1);
             mismatch = 1'b1;
