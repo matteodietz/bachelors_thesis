@@ -11,5 +11,17 @@ WARNING: [XSIM 43-4099] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_
 WARNING: [XSIM 43-4099] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv" Line 1. Module find_bw_left_edge(ACCUM_WIDTH=18,FREQ_BIN_WIDTH=16,THRESHOLD_DB=7680,NUM_ACCUMS=24) doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
-ERROR: [XSIM 43-3388] /usr/bin/gcc not found, please install GCC for your Linux distribution.
-ERROR: [XSIM 43-3915] Encountered a fatal error. Cannot continue. Exiting... 
+Compiling module xil_defaultlib.find_bw_left_edge(ACCUM_WIDTH=18...
+Compiling module xil_defaultlib.find_bw_left_edge_tb
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 83. System function $fgets is used as system task. This system function should have a LHS e.g. x=$fgets().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 93. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 94. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 101. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 104. System function $fgets is used as system task. This system function should have a LHS e.g. x=$fgets().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 109. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 112. System function $fgets is used as system task. This system function should have a LHS e.g. x=$fgets().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 115. System function $fscanf is used as system task. This system function should have a LHS e.g. x=$fscanf().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 117. System function $fgets is used as system task. This system function should have a LHS e.g. x=$fgets().
+WARNING: [XSIM 43-3373] "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" Line 118. System function $fgets is used as system task. This system function should have a LHS e.g. x=$fgets().
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot find_bw_left_edge_tb_behav

@@ -28,6 +28,7 @@ module find_bw_left_edge #(
 
     // threshold crossing states
     typedef enum logic [1:0] {
+        S0 = 2'b00,  // L1, L2 > threshold
         S1 = 2'b01,  // L1 > threshold, L2 <= threshold (crossing found!)
         S2 = 2'b10,  // L1 <= threshold, L2 > threshold
         S3 = 2'b11   // L1, L2 <= threshold

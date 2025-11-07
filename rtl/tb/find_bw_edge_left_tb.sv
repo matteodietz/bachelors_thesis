@@ -94,13 +94,21 @@ module find_bw_left_edge_tb ();
                 $fscanf(file, "%d\n", threshold_read); // Read THRESHOLD_DB
                 $display("\nNUM ACCUMS: %d", num_accums_read);
                 $display("\nTHRESHOLD DB: %d", threshold_read);
+                $display("\n>");
                 
                 // Read FREQ_BINS
-                for (int i = 0; i < num_accums_read; i++) $fscanf(file, "%h", freq_bins[i]);
+                for (int i = 0; i < num_accums_read; i++) begin
+                    $fscanf(file, "%h", freq_bins[i]);
+                    $display(" %h", freq_bins[i]);
+                end
                 $fgets(golden_line, file); // Consume newline
+                $display("\n>");
 
                 // Read POWER_DB
-                for (int i = 0; i < num_accums_read; i++) $fscanf(file, "%h", accum_vals[i]);
+                for (int i = 0; i < num_accums_read; i++) begin
+                    $fscanf(file, "%h", accum_vals[i]);
+                    $display(" %h", accum_vals[i]);
+                end
                 $fgets(golden_line, file); // Consume newline
                 
                 // Read EXPECTED
