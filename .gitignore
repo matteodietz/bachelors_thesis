@@ -14,3 +14,22 @@ simulator/src/ancient
 *.jou
 *.str
 *.pb
+*.wdb
+*.db
+*.rlx
+*.rtti
+*.sdb
+*.dbg
+*.mem
+*.ini
+*.xdbg
+*.xpr
+
+# vivado XSim simulation directories
+**/xsim.dir/
+**/behav/xsim/
+**/behav/questa/
+**/.Xil/
+**/.xcl.*/
+**/vivado.jou
+**/vivado.log
