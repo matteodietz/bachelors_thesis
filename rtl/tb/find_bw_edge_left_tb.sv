@@ -5,11 +5,11 @@ module find_bw_left_edge_tb ();
 
     // --- Parameters (MUST match DUT and Python generator) ---
     localparam time CLK_PERIOD         = 10ns;
-    localparam unsigned RST_CLK_CYCLES = 5;
+    localparam unsigned RST_CLK_CYCLES = 10;
     
-    localparam integer ACCUM_WIDTH    = 18; // As per Python script
-    localparam integer FREQ_BIN_WIDTH = 16; // As per Python script
-    localparam integer NUM_ACCUMS     = 24; // As per Python script
+    localparam unsigned ACCUM_WIDTH    = 18; // As per Python script
+    localparam unsigned FREQ_BIN_WIDTH = 16; // As per Python script
+    localparam unsigned NUM_ACCUMS     = 24; // As per Python script
 
     // --- Signals ---
     logic clk;
@@ -17,23 +17,31 @@ module find_bw_left_edge_tb ();
     logic start;
     
     logic signed [ACCUM_WIDTH-1:0]   accum_vals[NUM_ACCUMS];
-    logic        [FREQ_BIN_WIDTH-1:0] freq_bins[NUM_ACCUMS];
+    logic signed [FREQ_BIN_WIDTH-1:0] freq_bins[NUM_ACCUMS];
     
-    logic        [FREQ_BIN_WIDTH-1:0] act_f1, act_f2;
+    logic signed [FREQ_BIN_WIDTH-1:0] act_f1, act_f2;
     logic signed [ACCUM_WIDTH-1:0]   act_L1, act_L2;
     logic                           act_valid;
     logic                           act_busy;
 
-    // --- Clock and Reset Generation ---
-    initial begin
-        clk = 0;
-        forever #(CLK_PERIOD/2) clk = ~clk;
-    end
-    initial begin
-        rst_n = 1'b0;
-        repeat(RST_CLK_CYCLES) @(posedge clk);
-        rst_n = 1'b1;
-    end
+    // // --- Clock and Reset Generation ---
+    // initial begin
+    //     clk = 0;
+    //     forever #(CLK_PERIOD/2) clk = ~clk;
+    // end
+    // initial begin
+    //     rst_n = 1'b0;
+    //     repeat(RST_CLK_CYCLES) @(posedge clk);
+    //     rst_n = 1'b1;
+    // end
+
+    clk_rst_gen #(
+        .ClkPeriod   (CLK_PERIOD),
+        .RstClkCycles(RST_CLK_CYCLES)
+    ) i_clk_rst_gen (
+        .clk_o (clk),
+        .rst_no(rst_n)
+    );
 
     // --- DUT Instantiation ---
     find_bw_left_edge #(
@@ -71,6 +79,8 @@ module find_bw_left_edge_tb ();
         logic [ACCUM_WIDTH-1:0]   exp_L1, exp_L2;
         logic                         exp_valid;
 
+        wait (rst_n);
+
         // Open the vector file
         file = $fopen("find_bw_left_edge_vectors.txt", "r");
         if (file == 0) begin
@@ -79,7 +89,7 @@ module find_bw_left_edge_tb ();
         end
 
         // Skip header lines
-        for (int i = 0; i < 15; i++) begin
+        for (int i = 0; i < 15; i++) begin      // maybe needs to be 16
             $fgets(golden_line, file);
         end
 

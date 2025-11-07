@@ -203,8 +203,8 @@ module linear_interpolation #(
         .s_axis_dividend_tdata(div_dividend),
         .m_axis_dout_tvalid(div_rdy),
         .m_axis_dout_tdata({div_fractional, div_quotient})
-        // Note: Actual port mapping depends on your IP configuration
-        // The above assumes AXI4-Stream interface, maybe need to adjust for my version
+        // Note: Actual port mapping depends on IP configuration
+        // The above assumes AXI4-Stream interface, maybe need to adjust
     );
 
 endmodule

@@ -1,7 +1,7 @@
 module dft_accumulation #(
     parameter integer IQ_WIDTH = 16,           // Width of I and Q samples
     parameter integer WINDOW_WIDTH = 18,       // Width of window coefficients
-    parameter integer ACCUM_WIDTH = 48,        // Width of accumulators (complex real/imag)
+    parameter integer ACCUM_WIDTH = 18,        // Width of accumulators (complex real/imag)
     parameter integer NUM_BINS = 16,           // Number of frequency bins to calculate
     parameter integer OSC_WIDTH = 18,          // Width of complex oscillator (W) real/imag parts
     parameter integer SAMPLE_COUNT_WIDTH = 16  // Width of sample counter
