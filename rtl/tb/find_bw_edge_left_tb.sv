@@ -93,21 +93,21 @@ module find_bw_left_edge_tb ();
                 $fscanf(file, "%d\n", num_accums_read); // Read NUM_ACCUMS
                 $fscanf(file, "%d\n", threshold_read); // Read THRESHOLD_DB
                 $display("\nNUM ACCUMS: %d", num_accums_read);
-                $display("\nTHRESHOLD DB: %d", threshold_read);
-                $display("\n>");
+                $display("\nTHRESHOLD DB: %d = 0x3E200 in Q18.8", threshold_read);
+                // $display("\n>");
                 
                 // Read FREQ_BINS
                 for (int i = 0; i < num_accums_read; i++) begin
                     $fscanf(file, "%h", freq_bins[i]);
-                    $display(" %h", freq_bins[i]);
+                    // $display(" %h", freq_bins[i]);
                 end
                 $fgets(golden_line, file); // Consume newline
-                $display("\n>");
+                // $display("\n>");
 
                 // Read POWER_DB
                 for (int i = 0; i < num_accums_read; i++) begin
                     $fscanf(file, "%h", accum_vals[i]);
-                    $display(" %h", accum_vals[i]);
+                    // $display(" %h", accum_vals[i]);
                 end
                 $fgets(golden_line, file); // Consume newline
                 
@@ -169,7 +169,19 @@ module find_bw_left_edge_tb ();
             $display("ERROR: L2 mismatch. Expected: %h, Got: %h", expected_L2, act_L2);
             mismatch = 1'b1;
         end
-        if(mismatch) error_count++;
+
+        if ((act_f1 == expected_f1) && (act_f2 == expected_f2) && 
+            (act_L1 == expected_L1) && (act_L2 == expected_L2)) begin
+            $display("SUCCESS: f1 match. Expected: %h, Got: %h", expected_f1, act_f1);
+            $display("SUCCESS: f2 match. Expected: %h, Got: %h", expected_f2, act_f2);
+            $display("SUCCESS: L1 match. Expected: %h, Got: %h", expected_L1, act_L1);
+            $display("SUCCESS: L2 match. Expected: %h, Got: %h", expected_L2, act_L2);
+            $display("THRESHOLD COMPARISON: TB between L1, L2: L1 = %h, TB = 3e200, L2 = %h", act_L1, act_L2);
+        end
+
+        if(mismatch) begin 
+            error_count++;
+        end
     endtask
 
 endmodule
