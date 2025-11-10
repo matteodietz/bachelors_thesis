@@ -24,6 +24,8 @@ simulator/src/ancient
 *.ini
 *.xdbg
 *.xpr
+*.wpc
+*.wdf
 
 # vivado XSim simulation directories
 **/xsim.dir/
