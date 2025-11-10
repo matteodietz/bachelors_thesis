@@ -290,14 +290,17 @@ def main():
                     NUM_ACCUMS
                 )
                 test_cases.append(tc)
+
+            # ===== Synthethic Test Case to check early exiting properly disabled ===== 
+            # TODO
+
                 
         except Exception as e:
             print(f"Error loading PICMUS data: {e}")
             print("Skipping PICMUS test cases.")
     
     # # ===== Synthetic Test Cases (for sanity checking) =====
-    # print("\n========== Synthetic Test Cases ==========")
-    
+    # print("\n========== Synthetic Test Cases ==========")  
     # # Test parameters for synthetic signals
     # fs_synth = 31.25e6
     # nperseg_synth = 256

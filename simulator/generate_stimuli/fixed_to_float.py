@@ -22,9 +22,13 @@ def fixed_point_to_float(fixed_val, total_bits, frac_bits, signed=True):
 if __name__ == '__main__':
     val1_float = fixed_point_to_float(0x1E00, 18, 8)
     val2_float = fixed_point_to_float(0x3E200, 18, 8)
+    val3_float = fixed_point_to_float(0x3D70A, 18, 8)
+    val4_float = fixed_point_to_float(0x3E834, 18, 8)
     
     print(f"0x1E00 (Q18.8) = {val1_float}")
     print(f"0x3E200 (Q18.8) = {val2_float}")
+    print(f"L1 = {val3_float}")
+    print(f"L2 = {val4_float}")
     
     # # Verify the reverse calculation
     # neg_val_hex = 0xFFFFA0
