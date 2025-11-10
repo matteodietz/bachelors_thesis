@@ -364,19 +364,19 @@ def main():
     # )
     # test_cases.append(tc3)
     
-    # # Write to file
-    # output_dir = SIMULATOR_ROOT.parent / "rtl" / "simvectors"
-    # output_dir.mkdir(parents=True, exist_ok=True)
-    # output_path = output_dir / "find_bw_left_edge_vectors.txt"
+    # Write to file
+    output_dir = SIMULATOR_ROOT.parent / "rtl" / "simvectors"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "find_bw_left_edge_vectors.txt"
     
-    # write_vector_file(test_cases, output_path, ACCUM_WIDTH, FREQ_BIN_WIDTH)
+    write_vector_file(test_cases, output_path, ACCUM_WIDTH, FREQ_BIN_WIDTH)
     
-    # print(f"\n=== Successfully generated {len(test_cases)} test cases ===")
-    # print(f"Output file: {output_path}")
-    # print("\nTest cases generated:")
-    # for tc in test_cases:
-    #     status = "FOUND" if tc['expected_valid'] else "NOT FOUND"
-    #     print(f"  - {tc['test_name']}: {tc['num_accums']} bins, crossing {status}")
+    print(f"\n=== Successfully generated {len(test_cases)} test cases ===")
+    print(f"Output file: {output_path}")
+    print("\nTest cases generated:")
+    for tc in test_cases:
+        status = "FOUND" if tc['expected_valid'] else "NOT FOUND"
+        print(f"  - {tc['test_name']}: {tc['num_accums']} bins, crossing {status}")
 
 if __name__ == "__main__":
     main()
