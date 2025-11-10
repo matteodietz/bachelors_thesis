@@ -1,4 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/bsc25h10/mdietz/bachelors_thesis/rtl/src/find_bw_edge_left.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module find_bw_left_edge
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/bsc25h10/mdietz/bachelors_thesis/rtl/tb/find_bw_edge_left_tb.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module find_bw_left_edge_tb
