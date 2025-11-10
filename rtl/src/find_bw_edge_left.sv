@@ -75,20 +75,22 @@ module find_bw_left_edge #(
     // threshold comparison (treating values as signed dB)
     // note: THRESHOLD_DB is positive, but we're comparing against negative normalized dB values
     // so we check if accumulator_val > -THRESHOLD_DB, which is equivalent to |accumulator_val| < THRESHOLD_DB
-    assign L1_above_thresh = ($signed(L1) > -$signed(THRESHOLD_DB));
-    assign L2_above_thresh = ($signed(L2) > -$signed(THRESHOLD_DB));
+    // localparam int ACCUM_FRACTIONAL_BITS = 8;
+    localparam logic signed [ACCUM_WIDTH-1:0] THRESHOLD_Q = 18'sh1E00; // $signed(THRESHOLD_DB <<< ACCUM_FRACTIONAL_BITS);    // scale to Q-format
+    assign L1_above_thresh = ($signed(L1) > -THRESHOLD_Q);
+    assign L2_above_thresh = ($signed(L2) > -THRESHOLD_Q);
     
     // determine crossing state
     always_comb begin
         case ({L1_above_thresh, L2_above_thresh})
             2'b11: cross_state = S0;
-            2'b10: cross_state = S1;  // this is the crossing we want!
-            2'b01: cross_state = S2;
+            2'b10: cross_state = S1;  // this is the crossing we want! NO, this should have been the error!
+            2'b01: cross_state = S2;  // this is the crossing we want!
             2'b00: cross_state = S3;
         endcase
     end
     
-    assign crossing_found = (cross_state == S1);
+    assign crossing_found = (cross_state == S2); // changed cross_state from S1 to S2
     
     // next state logic
     always_comb begin

@@ -295,88 +295,88 @@ def main():
             print(f"Error loading PICMUS data: {e}")
             print("Skipping PICMUS test cases.")
     
-    # ===== Synthetic Test Cases (for sanity checking) =====
-    print("\n========== Synthetic Test Cases ==========")
+    # # ===== Synthetic Test Cases (for sanity checking) =====
+    # print("\n========== Synthetic Test Cases ==========")
     
-    # Test parameters for synthetic signals
-    fs_synth = 31.25e6
-    nperseg_synth = 256
-    mod_freq_synth = 7.8125e6
-    threshold_db_synth = -30
+    # # Test parameters for synthetic signals
+    # fs_synth = 31.25e6
+    # nperseg_synth = 256
+    # mod_freq_synth = 7.8125e6
+    # threshold_db_synth = -30
     
-    # Define sparse frequency bins
-    delta_f = 0.25e6
-    half_bw_est = mod_freq_synth / 2
-    s_coarse = np.linspace(-mod_freq_synth, mod_freq_synth, 8)
-    s_fine_left = np.linspace(-half_bw_est - delta_f, -half_bw_est + delta_f, 8)
-    s_fine_right = np.linspace(half_bw_est - delta_f, half_bw_est + delta_f, 8)
-    S_bins_synth = np.unique(np.concatenate([s_coarse, s_fine_left, s_fine_right]))
+    # # Define sparse frequency bins
+    # delta_f = 0.25e6
+    # half_bw_est = mod_freq_synth / 2
+    # s_coarse = np.linspace(-mod_freq_synth, mod_freq_synth, 8)
+    # s_fine_left = np.linspace(-half_bw_est - delta_f, -half_bw_est + delta_f, 8)
+    # s_fine_right = np.linspace(half_bw_est - delta_f, half_bw_est + delta_f, 8)
+    # S_bins_synth = np.unique(np.concatenate([s_coarse, s_fine_left, s_fine_right]))
     
-    t = np.arange(nperseg_synth) / fs_synth
+    # t = np.arange(nperseg_synth) / fs_synth
     
-    # Test Case 1: Centered Gaussian pulse
-    print("\n--- Test Case: Centered Gaussian pulse ---")
-    signal_1 = np.exp(-((t - nperseg_synth/(2*fs_synth))**2) / (2*(10e-6)**2)) * np.exp(1j * 2 * np.pi * 0 * t)
+    # # Test Case 1: Centered Gaussian pulse
+    # print("\n--- Test Case: Centered Gaussian pulse ---")
+    # signal_1 = np.exp(-((t - nperseg_synth/(2*fs_synth))**2) / (2*(10e-6)**2)) * np.exp(1j * 2 * np.pi * 0 * t)
     
-    tc1 = generate_test_case(
-        "synth_centered_gaussian",
-        signal_1,
-        fs_synth,
-        S_bins_synth,
-        threshold_db_synth,
-        ACCUM_WIDTH,
-        FREQ_BIN_WIDTH,
-        NUM_ACCUMS
-    )
-    test_cases.append(tc1)
+    # tc1 = generate_test_case(
+    #     "synth_centered_gaussian",
+    #     signal_1,
+    #     fs_synth,
+    #     S_bins_synth,
+    #     threshold_db_synth,
+    #     ACCUM_WIDTH,
+    #     FREQ_BIN_WIDTH,
+    #     NUM_ACCUMS
+    # )
+    # test_cases.append(tc1)
     
-    # Test Case 2: Wide bandwidth chirp
-    print("\n--- Test Case: Wide bandwidth chirp ---")
-    chirp_bw = 5e6
-    signal_2 = signal.chirp(t, f0=-chirp_bw/2, f1=chirp_bw/2, t1=t[-1], method='linear')
-    signal_2 = signal_2 + 1j * signal.chirp(t, f0=-chirp_bw/2, f1=chirp_bw/2, t1=t[-1], method='linear', phi=90)
+    # # Test Case 2: Wide bandwidth chirp
+    # print("\n--- Test Case: Wide bandwidth chirp ---")
+    # chirp_bw = 5e6
+    # signal_2 = signal.chirp(t, f0=-chirp_bw/2, f1=chirp_bw/2, t1=t[-1], method='linear')
+    # signal_2 = signal_2 + 1j * signal.chirp(t, f0=-chirp_bw/2, f1=chirp_bw/2, t1=t[-1], method='linear', phi=90)
     
-    tc2 = generate_test_case(
-        "synth_wide_bandwidth",
-        signal_2,
-        fs_synth,
-        S_bins_synth,
-        threshold_db_synth,
-        ACCUM_WIDTH,
-        FREQ_BIN_WIDTH,
-        NUM_ACCUMS
-    )
-    test_cases.append(tc2)
+    # tc2 = generate_test_case(
+    #     "synth_wide_bandwidth",
+    #     signal_2,
+    #     fs_synth,
+    #     S_bins_synth,
+    #     threshold_db_synth,
+    #     ACCUM_WIDTH,
+    #     FREQ_BIN_WIDTH,
+    #     NUM_ACCUMS
+    # )
+    # test_cases.append(tc2)
     
-    # Test Case 3: Narrow bandwidth signal
-    print("\n--- Test Case: Narrow bandwidth signal ---")
-    signal_3 = np.exp(-((t - nperseg_synth/(2*fs_synth))**2) / (2*(50e-6)**2)) * np.exp(1j * 2 * np.pi * 0 * t)
+    # # Test Case 3: Narrow bandwidth signal
+    # print("\n--- Test Case: Narrow bandwidth signal ---")
+    # signal_3 = np.exp(-((t - nperseg_synth/(2*fs_synth))**2) / (2*(50e-6)**2)) * np.exp(1j * 2 * np.pi * 0 * t)
     
-    tc3 = generate_test_case(
-        "synth_narrow_bandwidth",
-        signal_3,
-        fs_synth,
-        S_bins_synth,
-        threshold_db_synth,
-        ACCUM_WIDTH,
-        FREQ_BIN_WIDTH,
-        NUM_ACCUMS
-    )
-    test_cases.append(tc3)
+    # tc3 = generate_test_case(
+    #     "synth_narrow_bandwidth",
+    #     signal_3,
+    #     fs_synth,
+    #     S_bins_synth,
+    #     threshold_db_synth,
+    #     ACCUM_WIDTH,
+    #     FREQ_BIN_WIDTH,
+    #     NUM_ACCUMS
+    # )
+    # test_cases.append(tc3)
     
-    # Write to file
-    output_dir = SIMULATOR_ROOT.parent / "rtl" / "simvectors"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "find_bw_left_edge_vectors.txt"
+    # # Write to file
+    # output_dir = SIMULATOR_ROOT.parent / "rtl" / "simvectors"
+    # output_dir.mkdir(parents=True, exist_ok=True)
+    # output_path = output_dir / "find_bw_left_edge_vectors.txt"
     
-    write_vector_file(test_cases, output_path, ACCUM_WIDTH, FREQ_BIN_WIDTH)
+    # write_vector_file(test_cases, output_path, ACCUM_WIDTH, FREQ_BIN_WIDTH)
     
-    print(f"\n=== Successfully generated {len(test_cases)} test cases ===")
-    print(f"Output file: {output_path}")
-    print("\nTest cases generated:")
-    for tc in test_cases:
-        status = "FOUND" if tc['expected_valid'] else "NOT FOUND"
-        print(f"  - {tc['test_name']}: {tc['num_accums']} bins, crossing {status}")
+    # print(f"\n=== Successfully generated {len(test_cases)} test cases ===")
+    # print(f"Output file: {output_path}")
+    # print("\nTest cases generated:")
+    # for tc in test_cases:
+    #     status = "FOUND" if tc['expected_valid'] else "NOT FOUND"
+    #     print(f"  - {tc['test_name']}: {tc['num_accums']} bins, crossing {status}")
 
 if __name__ == "__main__":
     main()

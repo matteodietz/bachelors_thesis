@@ -20,10 +20,10 @@ def fixed_point_to_float(fixed_val, total_bits, frac_bits, signed=True):
 
 # --- Example Usage ---
 if __name__ == '__main__':
-    val1_float = fixed_point_to_float(0xbd80, 16, 12)
+    val1_float = fixed_point_to_float(0x1E00, 18, 8)
     val2_float = fixed_point_to_float(0xbea5, 16, 12)
     
-    print(f"0x160 (Q18.6) = {val1_float}")
+    print(f"0x1E00 (Q18.8) = {val1_float}")
     print(f"0x165 (Q18.6) = {val2_float}")
     
     # # Verify the reverse calculation
