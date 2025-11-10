@@ -42,7 +42,7 @@ module find_bw_left_edge_tb ();
         // The THRESHOLD_DB is a parameter in the DUT, we need to pass it
         // Let's assume it's also read from the file.
         // For simplicity here, let's hardcode it for now.
-        .THRESHOLD_DB   (7680), // -30.0 in Q8.8 is approx -7680
+        .THRESHOLD_DB   (30),
         .NUM_ACCUMS     (NUM_ACCUMS)
     ) dut (
         .clk_i              (clk),
@@ -120,11 +120,13 @@ module find_bw_left_edge_tb ();
                 // --- Drive DUT and Check ---
                 wait(rst_n);
                 start = 1'b1;
+                $display("driving dut");
                 @(posedge clk);
                 start = 1'b0;
 
                 // Wait for valid signal, with a timeout
                 wait (act_valid);
+                $display("awaited valid_o signal");
                 
                 @(posedge clk); // Let outputs settle
                 
