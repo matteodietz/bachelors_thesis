@@ -1,3 +1,36 @@
+def float_to_fixed_point(value, int_bits, frac_bits, signed=True):
+    """
+    Convert floating point to fixed point representation.
+    
+    Args:
+        value: floating point value
+        int_bits: number of integer bits
+        frac_bits: number of fractional bits
+        signed: whether the number is signed
+    
+    Returns:
+        Integer representation of fixed point number
+    """
+    total_bits = int_bits + frac_bits
+    scale = 2 ** frac_bits
+    fixed_val = int(round(value * scale))
+    
+    if signed:
+        max_val = 2 ** (total_bits - 1) - 1
+        min_val = -(2 ** (total_bits - 1))
+    else:
+        max_val = 2 ** total_bits - 1
+        min_val = 0
+    
+    # Saturate
+    fixed_val = max(min_val, min(max_val, fixed_val))
+    
+    # Convert to unsigned representation for output
+    if signed and fixed_val < 0:
+        fixed_val = (1 << total_bits) + fixed_val
+    
+    return fixed_val
+
 def fixed_point_to_float(fixed_val, total_bits, frac_bits, signed=True):
     """
     Convert a fixed-point integer (potentially in unsigned two's complement format)
@@ -18,7 +51,7 @@ def fixed_point_to_float(fixed_val, total_bits, frac_bits, signed=True):
         
     return float(signed_int) / (2**frac_bits)
 
-# --- Example Usage ---
+# --- example usage ---
 if __name__ == '__main__':
     val1_float = fixed_point_to_float(0x1E00, 18, 8)
     val2_float = fixed_point_to_float(0x3E200, 18, 8)
