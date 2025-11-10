@@ -152,6 +152,80 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, threshold_db,
         'golden_L2': L2_golden
     }
 
+def generate_synth_test_case(test_name, iq_data, db_data, fs, freq_bins, threshold_db, 
+                       accum_width, freq_bin_width, num_accums):
+    """
+    Generate a single test case for the left edge finder.
+    
+    Returns:
+        Dictionary containing inputs and expected outputs
+    """
+    print(f"\n=== Generating test case: {test_name} ===")
+    
+    # Run golden model
+    dft_bins = streaming_dft_processor(iq_data, fs, freq_bins, window='hann')
+    freqs_sorted, power_db_norm_sorted = convert_to_sorted_db_power(dft_bins)
+    
+    # Find left edge points
+    f1_golden, f2_golden, L1_golden, L2_golden = find_left_edge_points(
+        freqs_sorted, db_data, threshold_db=threshold_db
+    )
+    
+    print(f"Golden model results:")
+    print(f"  Number of frequency bins: {len(freqs_sorted)}")
+    print(f"  Frequency range: [{freqs_sorted[0]/1e6:.3f}, {freqs_sorted[-1]/1e6:.3f}] MHz")
+    if f1_golden is not None:
+        print(f"  f1 = {f1_golden/1e6:.6f} MHz, f2 = {f2_golden/1e6:.6f} MHz")
+        print(f"  L1 = {L1_golden:.3f} dB, L2 = {L2_golden:.3f} dB")
+        print(f"  Bandwidth edge at: {f1_golden/1e6:.6f} MHz (between f1 and f2)")
+    else:
+        print(f"  No crossing found!")
+    
+    # Convert to fixed point for hardware
+    # Frequency bins: represent in MHz as signed fixed-point Q(freq_bin_width-6).6 format
+    # This gives us range of +/- 8 MHz (for 9-bit width) with 6 fractional bits (0.015625 MHz resolution)
+    freq_frac_bits = 12
+    freq_int_bits = freq_bin_width - freq_frac_bits
+    
+    # For frequencies, we need two's complement representation
+    freq_bins_hw = []
+    for f in freqs_sorted:
+        f_mhz = f / 1e6
+        fixed_val = float_to_fixed_point(f_mhz, freq_int_bits, freq_frac_bits, signed=True)
+        freq_bins_hw.append(fixed_val)
+    
+    # Power values: already in dB, use Q(accum_width-8).8 format (8 fractional bits)
+    power_frac_bits = 8
+    power_int_bits = accum_width - power_frac_bits
+    power_db_hw = [float_to_fixed_point(p, power_int_bits, power_frac_bits, signed=True) 
+                   for p in db_data]
+    
+    # Expected outputs - frequencies in MHz (already in two's complement from float_to_fixed_point)
+    f1_hw = float_to_fixed_point(f1_golden / 1e6, freq_int_bits, freq_frac_bits, signed=True) if f1_golden is not None else 0
+    f2_hw = float_to_fixed_point(f2_golden / 1e6, freq_int_bits, freq_frac_bits, signed=True) if f2_golden is not None else 0
+    L1_hw = float_to_fixed_point(L1_golden, power_int_bits, power_frac_bits, signed=True) if L1_golden is not None else 0
+    L2_hw = float_to_fixed_point(L2_golden, power_int_bits, power_frac_bits, signed=True) if L2_golden is not None else 0
+    
+    valid = 1 if all(v is not None for v in [f1_golden, f2_golden, L1_golden, L2_golden]) else 0
+    
+    return {
+        'test_name': test_name,
+        'num_accums': len(freqs_sorted),
+        'freq_bins': freq_bins_hw,
+        'power_db': power_db_hw,
+        'threshold_db': threshold_db,
+        'expected_f1': f1_hw,
+        'expected_f2': f2_hw,
+        'expected_L1': L1_hw,
+        'expected_L2': L2_hw,
+        'expected_valid': valid,
+        # 'freq_resolution': freq_resolution,
+        'golden_f1': f1_golden,
+        'golden_f2': f2_golden,
+        'golden_L1': L1_golden,
+        'golden_L2': L2_golden
+    }
+
 def write_vector_file(test_cases, output_path, accum_width, freq_bin_width):
     """
     Write test vectors to file in a format readable by SystemVerilog testbench.
@@ -281,7 +355,7 @@ def main():
                 
                 tc = generate_test_case(
                     test_name,
-                    time_window_data,
+                    time_window_data, # change this
                     fs_baseline,
                     S_bins,
                     threshold_db,
@@ -292,7 +366,43 @@ def main():
                 test_cases.append(tc)
 
             # ===== Synthethic Test Case to check early exiting properly disabled ===== 
-            # TODO
+            synth_test_config = [
+                ("synth_test_1", 64, 29),
+            ]
+
+            for test_name, channel, window_num in synth_test_config:
+                print(f"\n=== Generating SYNTHETIC test with multiple threshold crossings ===")
+
+                start_sample = window_num * hop
+                end_sample = start_sample + nperseg
+
+                time_window_data = baseline_iq_data[start_sample:end_sample, channel]
+
+                db_data = np.zeros(len(S_bins))
+                db_data[0] = -40
+                db_data[3] = -40
+                db_data[4] = -40
+                db_data[5] = -40
+                db_data[-1] = -40
+                db_data[-4] = -40
+                db_data[-5] = -40
+                db_data[-6] = -40
+
+
+                # print(f"\n Synthetic dB data with multiple crossings: {db_data}")
+
+                tc = generate_synth_test_case(
+                    test_name,
+                    time_window_data,
+                    db_data,
+                    fs_baseline,
+                    S_bins,
+                    threshold_db,
+                    ACCUM_WIDTH,
+                    FREQ_BIN_WIDTH,
+                    NUM_ACCUMS
+                )
+                test_cases.append(tc)
 
                 
         except Exception as e:
