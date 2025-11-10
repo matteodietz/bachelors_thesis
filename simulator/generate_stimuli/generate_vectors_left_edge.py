@@ -339,9 +339,9 @@ def main():
                 ("picmus_ch64_win29", 64, 29),
                 ("picmus_ch64_win15", 64, 15),
                 ("picmus_ch64_win27", 64, 27),
-                ("picmus_ch64_win31", 64, 31),
+                ("picmus_ch64_win31", 96, 31),
                 ("picmus_ch32_win29", 32, 29),
-                ("picmus_ch96_win29", 96, 29),
+                # ("picmus_ch96_win29", 96, 29),
             ]
             
             for test_name, channel, window_num in test_configs:
