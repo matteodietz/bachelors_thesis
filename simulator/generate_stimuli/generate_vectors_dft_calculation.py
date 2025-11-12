@@ -68,7 +68,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Convert to fixed point
     # I/Q samples: Use Q(iq_width-8).8 format (8 fractional bits)
-    iq_frac_bits = 8
+    iq_frac_bits = 16
     iq_int_bits = iq_width - iq_frac_bits
     
     i_samples_hw = [float_to_fixed_point(np.real(s), iq_int_bits, iq_frac_bits, signed=True) 
@@ -101,7 +101,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Expected accumulator outputs: Use Q(accum_width-8).8 format (8 fractional bits)
     # Note: The accumulators grow large, so we need more integer bits
-    accum_frac_bits = 8
+    accum_frac_bits = 36
     accum_int_bits = accum_width - accum_frac_bits
     
     # Scale expected outputs to match hardware scaling
@@ -222,8 +222,8 @@ def main():
     print("=== Generating Simulation Vectors for dft_accumulation.sv ===\n")
     
     # Hardware parameters
-    IQ_WIDTH = 16
-    WINDOW_WIDTH = 18
+    IQ_WIDTH = 24
+    WINDOW_WIDTH = 24
     ACCUM_WIDTH = 48  # Needs to be large to avoid overflow
     OSC_WIDTH = 18
     NUM_BINS = 24  # Maximum
