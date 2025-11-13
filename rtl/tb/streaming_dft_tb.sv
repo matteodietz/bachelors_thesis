@@ -172,9 +172,12 @@ module dft_accumulation_tb ();
                     status = $fscanf(file, "%h", W_real_data[n][k]);
                 end
                 
+                // TODO: the following does not get written into the dut
+
                 // Read W_imag[0..K-1]
                 for (int k = 0; k < num_bins_read; k++) begin
                     status = $fscanf(file, "%h", W_imag_data[n][k]);
+                    // $display("oscillator values read for bin number %d", k);
                 end
                 
                 status = $fgets(line, file); // Consume newline
@@ -259,6 +262,8 @@ module dft_accumulation_tb ();
                 check_result(num_bins_read, exp_A_real, exp_A_imag, n_errs);
             end
             
+            // early exit to reduce the waveform to one testcase
+            break;
             // Wait before next test
             repeat(10) @(posedge clk);
         end
