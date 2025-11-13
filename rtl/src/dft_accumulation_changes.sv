@@ -1,287 +1,173 @@
 module dft_accumulation #(
-    parameter integer IQ_WIDTH = 16,           // Width of I and Q samples
-    parameter integer WINDOW_WIDTH = 16,       // Width of window coefficients
-    parameter integer ACCUM_WIDTH = 48,        // Width of accumulators (complex real/imag)
-    parameter integer NUM_BINS = 16,           // Number of frequency bins to calculate
-    parameter integer OSC_WIDTH = 27,          // Width of complex oscillator (W) real/imag parts
-    parameter integer SAMPLE_COUNT_WIDTH = 16  // Width of sample counter
+    parameter integer IQ_WIDTH = 16,
+    parameter integer WINDOW_WIDTH = 16,
+    parameter integer ACCUM_WIDTH = 48,
+    parameter integer NUM_BINS = 16,
+    parameter integer OSC_WIDTH = 27,
+    parameter integer SAMPLE_COUNT_WIDTH = 16
 )(
     input  logic clk_i,
     input  logic rst_ni,
     
     // Control signals
-    input  logic start_i,                      // Start new DFT accumulation
-    input  logic sample_valid_i,               // New sample available
-    input  logic last_sample_i,                // Last sample in sequence
+    input  logic start_i,
+    input  logic sample_valid_i,
+    input  logic last_sample_i,
     
-    // Input data - Complex I/Q signal from AFE
-    input  logic signed [IQ_WIDTH-1:0] i_sample_i,      // I component (real)
-    input  logic signed [IQ_WIDTH-1:0] q_sample_i,      // Q component (imaginary)
-
-    // Current window coefficient h[n] - precomputed and streamed from APU
-    input  logic signed [WINDOW_WIDTH-1:0] window_coeff_i,
+    // Input data
+    input  logic signed [IQ_WIDTH-1:0]       i_sample_i,
+    input  logic signed [IQ_WIDTH-1:0]       q_sample_i,
+    input  logic signed [WINDOW_WIDTH-1:0]   window_coeff_i,
+    input  logic signed [OSC_WIDTH-1:0]      W_real_i[NUM_BINS],
+    input  logic signed [OSC_WIDTH-1:0]      W_imag_i[NUM_BINS],
     
-    // Complex oscillator values W[n,k] - precomputed and streamed from APU
-    input  logic signed [OSC_WIDTH-1:0] W_real_i[NUM_BINS],
-    input  logic signed [OSC_WIDTH-1:0] W_imag_i[NUM_BINS],
-    
-    // Outputs - accumulated DFT values
+    // Outputs
     output logic signed [ACCUM_WIDTH-1:0] A_real_o[NUM_BINS],
     output logic signed [ACCUM_WIDTH-1:0] A_imag_o[NUM_BINS],
-    output logic valid_o,                      // Accumulation complete
-    output logic busy_o                        // Module is processing, can get rid of this
+    output logic                         valid_o,
+    output logic                         busy_o
 );
 
     // State machine
-    typedef enum logic [1:0] {
-        IDLE = 2'b00,
-        ACCUMULATE = 2'b01,
-        DONE = 2'b10
-    } state_t;
-
+    typedef enum logic [1:0] { IDLE, ACCUMULATE, DONE } state_t;
     state_t state_q, state_d;
 
-    // Accumulator registers A[k] = sum over n of: (I[n]+j*Q[n]) * h[n] * W[n,k]
-    logic signed [ACCUM_WIDTH-1:0] A_real_q[NUM_BINS], A_real_d[NUM_BINS];
-    logic signed [ACCUM_WIDTH-1:0] A_imag_q[NUM_BINS], A_imag_d[NUM_BINS];
+    // Accumulator registers
+    logic signed [ACCUM_WIDTH-1:0] A_real_q[NUM_BINS], A_imag_q[NUM_BINS];
 
-    // Intermediate: x[n] * h[n] where x[n] = I[n] + j*Q[n]
-    // x_weighted_real = I[n] * h[n]
-    // x_weighted_imag = Q[n] * h[n]
-    logic signed [IQ_WIDTH+WINDOW_WIDTH:0] x_weighted_real;
-    logic signed [IQ_WIDTH+WINDOW_WIDTH:0] x_weighted_imag;
+    // --- PIPELINE REGISTERS ---    
+    // Stage 0: Registered inputs
+    logic signed [IQ_WIDTH-1:0]      i_sample_p0, q_sample_p0;
+    logic signed [WINDOW_WIDTH-1:0]  window_coeff_p0;
+    logic signed [OSC_WIDTH-1:0]     W_real_p0[NUM_BINS], W_imag_p0[NUM_BINS];
+    
+    // Stage 1: Result of x[n] * h[n]
+    logic signed [IQ_WIDTH+WINDOW_WIDTH-1:0] x_weighted_real_p1, x_weighted_imag_p1;
 
-    // Complex products for accumulation: (I[n] + j*Q[n]) * h[n] * W[k]
-    // This is a complex multiplication: (x_real + j*x_imag) * (W_real + j*W_imag)
-    // Result_real = x_real*W_real - x_imag*W_imag
-    // Result_imag = x_real*W_imag + x_imag*W_real
-    logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] accum_contrib_real[NUM_BINS];
-    logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] accum_contrib_imag[NUM_BINS];
+    // Stage 2: Result of complex multiplication
+    logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH-1:0] accum_contrib_real_p2[NUM_BINS];
+    logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH-1:0] accum_contrib_imag_p2[NUM_BINS];
+    
+    // Pipeline control signals
+    logic sample_valid_p1, sample_valid_p2;
+    logic last_sample_p1, last_sample_p2;
 
-    // Sample counter
-    logic [SAMPLE_COUNT_WIDTH-1:0] sample_count_q, sample_count_d;
+    // =======================================================
+    // DATAPATH PIPELINE
+    // =======================================================
 
-    // State registers
+    // --- Pipeline Stage 0: Register all inputs ---
+    // This provides a clean starting point for the pipeline.
+    always_ff @(posedge clk_i) begin
+        if (sample_valid_i) begin
+            i_sample_p0      <= i_sample_i;
+            q_sample_p0      <= q_sample_i;
+            window_coeff_p0  <= window_coeff_i;
+            W_real_p0        <= W_real_i;
+            W_imag_p0        <= W_imag_i;
+        end
+    end
+    
+    // --- Pipeline Stage 1: Windowing Multiplication (x * h) ---
+    always_ff @(posedge clk_i) begin
+        // Use $signed() to ensure signed multiplication
+        x_weighted_real_p1 <= $signed(i_sample_p0) * $signed(window_coeff_p0);
+        x_weighted_imag_p1 <= $signed(q_sample_p0) * $signed(window_coeff_p0);
+    end
+
+    // --- Pipeline Stage 2: Complex Multiplication ((x*h) * W) ---
+    // This is a combinatorial block between pipeline stages 1 and 2
+    always_comb begin
+        for (int k = 0; k < NUM_BINS; k++) begin
+            logic signed [IQ_WIDTH+WINDOW_WIDTH-1:0] xr_p1, xi_p1;
+            logic signed [OSC_WIDTH-1:0]             wr_p0, wi_p0;
+            
+            xr_p1 = x_weighted_real_p1;
+            xi_p1 = x_weighted_imag_p1;
+            wr_p0 = W_real_p0[k]; // Use registered W values from Stage 0
+            wi_p0 = W_imag_p0[k];
+
+            // Use $signed() casts for all operands
+            accum_contrib_real_p2[k] = $signed(xr_p1) * $signed(wr_p0) - $signed(xi_p1) * $signed(wi_p0);
+            accum_contrib_imag_p2[k] = $signed(xr_p1) * $signed(wi_p0) + $signed(xi_p1) * $signed(wr_p0);
+        end
+    end
+
+    // --- Pipeline Control Signal Delay ---
+    // The valid and last flags must be delayed to match the datapath latency
+    always_ff @(posedge clk_i) begin
+        sample_valid_p1 <= sample_valid_i;
+        last_sample_p1  <= last_sample_i;
+        
+        sample_valid_p2 <= sample_valid_p1;
+        last_sample_p2  <= last_sample_p1;
+    end
+    
+    // =======================================================
+    // CONTROL LOGIC (State Machine and Accumulators)
+    // =======================================================
+    
+    // State register
+    always_ff @(posedge clk_i or negedge rst_ni) begin
+        if (!rst_ni) state_q <= IDLE;
+        else         state_q <= state_d;
+    end
+
+    // Accumulator and State Machine Logic
     always_ff @(posedge clk_i or negedge rst_ni) begin
         if (!rst_ni) begin
-            state_q <= IDLE;
-            sample_count_q <= '0;
-            
             for (int k = 0; k < NUM_BINS; k++) begin
                 A_real_q[k] <= '0;
                 A_imag_q[k] <= '0;
             end
+            state_d <= IDLE;
         end else begin
-            state_q <= state_d;
-            sample_count_q <= sample_count_d;
+            // Default assignments
+            state_d <= state_q;
             
-            for (int k = 0; k < NUM_BINS; k++) begin
-                A_real_q[k] <= A_real_d[k];
-                A_imag_q[k] <= A_imag_d[k];
-            end
-        end
-    end
-
-    // Active high reset for the DSP slices
-    logic rst_p;
-    assign rst_p = ~rst_ni;
-
-    // ========================================
-    // Step 1: Compute x[n] * h[n] for the complex input
-    // x[n] = I[n] + j*Q[n]
-    // x_weighted = x[n] * h[n] = (I[n] + j*Q[n]) * h[n]
-    //            = I[n]*h[n] + j*Q[n]*h[n]
-    // ========================================
-    // always_comb begin 
-    //    x_weighted_real = i_sample_i * window_coeff_i;
-    //    x_weighted_imag = q_sample_i * window_coeff_i;
-    // end
-
-    dsp48_mult #(
-        .WIDTH_A(IQ_WIDTH),
-        .WIDTH_B(WINDOW_WIDTH),
-        // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
-        .LATENCY(1)
-    ) i_weighted_mult (
-        .clk(clk_i),
-        .rst(rst_p),
-        .ce(sample_valid_i),
-        .a(i_sample_i),
-        .b(window_coeff_i),
-        .p(x_weighted_real)
-    );
-
-    dsp48_mult #(
-        .WIDTH_A(IQ_WIDTH),
-        .WIDTH_B(WINDOW_WIDTH),
-        // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
-        .LATENCY(1)
-    ) q_weighted_mult (
-        .clk(clk_i),
-        .rst(rst_p),
-        .ce(sample_valid_i),
-        .a(q_sample_i),
-        .b(window_coeff_i),
-        .p(x_weighted_imag)
-    );
-
-    // For each frequency bin k, compute the complex products and updates
-    genvar k;
-    generate
-        for (k = 0; k < NUM_BINS; k++) begin : bin_processing
-            
-            // ========================================
-            // Step 2: Complex multiplication: (x_weighted_real + j*x_weighted_imag) * (W_real + j*W_imag)
-            // W values are streamed directly from APU (W_real_i[k], W_imag_i[k])
-            // Result_real = x_weighted_real * W_real - x_weighted_imag * W_imag
-            // Result_imag = x_weighted_real * W_imag + x_weighted_imag * W_real
-            // ========================================
-            
-            // x_weighted_real * W_real
-            logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xr_wr;
-            dsp48_mult #(
-                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
-                .WIDTH_B(OSC_WIDTH),
-                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
-                .LATENCY(1)
-            ) xr_wr_mult (
-                .clk(clk_i),
-                .rst(rst_p),
-                .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_real),
-                .b(W_real_i[k]),  // Direct input from APU
-                .p(xr_wr)
-            );
-            
-            // x_weighted_imag * W_imag
-            logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xi_wi;
-            dsp48_mult #(
-                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
-                .WIDTH_B(OSC_WIDTH),
-                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
-                .LATENCY(1)
-            ) xi_wi_mult (
-                .clk(clk_i),
-                .rst(rst_p),
-                .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_imag),
-                .b(W_imag_i[k]),  // Direct input from APU
-                .p(xi_wi)
-            );
-            
-            // x_weighted_real * W_imag
-            logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xr_wi;
-            dsp48_mult #(
-                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
-                .WIDTH_B(OSC_WIDTH),
-                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
-                .LATENCY(1)
-            ) xr_wi_mult (
-                .clk(clk_i),
-                .rst(rst_p),
-                .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_real),
-                .b(W_imag_i[k]),  // Direct input from APU
-                .p(xr_wi)
-            );
-            
-            // x_weighted_imag * W_real
-            logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xi_wr;
-            dsp48_mult #(
-                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
-                .WIDTH_B(OSC_WIDTH),
-                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
-                .LATENCY(1)
-            ) xi_wr_mult (
-                .clk(clk_i),
-                .rst(rst_p),
-                .a(x_weighted_imag),
-                .ce(sample_valid_i), // TODO: maybe connect to something different
-                .b(W_real_i[k]),  // Direct input from APU
-                .p(xi_wr)
-            );
-            
-            // Combine to get complex product
-            assign accum_contrib_real[k] = xr_wr - xi_wi;
-            assign accum_contrib_imag[k] = xr_wi + xi_wr;
-            
-        end
-    endgenerate
-
-    // Next state logic
-    always_comb begin
-        // Defaults
-        state_d = state_q;
-        sample_count_d = sample_count_q;
-        
-        // Default: hold accumulator values
-        for (int k = 0; k < NUM_BINS; k++) begin
-            A_real_d[k] = A_real_q[k];
-            A_imag_d[k] = A_imag_q[k];
-        end
-
-        case (state_q)
-            IDLE: begin
-                if (start_i) begin
-                    state_d = ACCUMULATE;
-                    sample_count_d = '0;
-                    
-                    // Initialize accumulators to zero
-                    for (int k = 0; k < NUM_BINS; k++) begin
-                        A_real_d[k] = '0;
-                        A_imag_d[k] = '0;
+            case (state_q)
+                IDLE: begin
+                    if (start_i) begin
+                        state_d <= ACCUMULATE;
+                        // Reset accumulators on start
+                        for (int k = 0; k < NUM_BINS; k++) begin
+                            A_real_q[k] <= '0;
+                            A_imag_q[k] <= '0;
+                        end
                     end
                 end
-            end
-
-            ACCUMULATE: begin
-                if (sample_valid_i) begin
-                    // Update accumulators: A += (I + jQ) * h[n] * W
-                    // W values come directly from APU via W_real_i[k] and W_imag_i[k]
-                    // Scale down the products to fit accumulator width
-                    for (int k = 0; k < NUM_BINS; k++) begin
-                        // Shift amount to scale product down to accumulator width
-                        // Product width is IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2
-                        // We want ACCUM_WIDTH output
-                        localparam int SHIFT_AMOUNT = IQ_WIDTH + WINDOW_WIDTH + OSC_WIDTH + 2 - ACCUM_WIDTH;
-                        
-                        if (SHIFT_AMOUNT > 0) begin
-                            A_real_d[k] = A_real_q[k] + (accum_contrib_real[k] >>> SHIFT_AMOUNT);
-                            A_imag_d[k] = A_imag_q[k] + (accum_contrib_imag[k] >>> SHIFT_AMOUNT);
-                        end else begin
-                            A_real_d[k] = A_real_q[k] + accum_contrib_real[k];
-                            A_imag_d[k] = A_imag_q[k] + accum_contrib_imag[k];
+                
+                ACCUMULATE: begin
+                    // Accumulation happens when the valid data emerges from the pipeline
+                    if (sample_valid_p2) begin 
+                        for (int k = 0; k < NUM_BINS; k++) begin
+                            // Shift logic remains the same
+                            localparam int SHIFT_AMOUNT = (IQ_WIDTH + WINDOW_WIDTH + OSC_WIDTH) - ACCUM_WIDTH;
+                            
+                            // This is the MAC-friendly pattern: reg <= reg + product
+                            A_real_q[k] <= A_real_q[k] + (accum_contrib_real_p2[k] >>> SHIFT_AMOUNT);
+                            A_imag_q[k] <= A_imag_q[k] + (accum_contrib_imag_p2[k] >>> SHIFT_AMOUNT);
                         end
                     end
                     
-                    sample_count_d = sample_count_q + 1;
-                    
-                    // Check for last sample
-                    if (last_sample_i) begin
-                        state_d = DONE;
+                    // Transition to DONE state when the last sample has been processed
+                    if (last_sample_p2) begin
+                        state_d <= DONE;
                     end
                 end
-            end
 
-            DONE: begin
-                state_d = IDLE;
-            end
-
-            default: begin
-                state_d = IDLE;
-            end
-        endcase
+                DONE: begin
+                    // After one cycle in DONE, go back to IDLE
+                    state_d <= IDLE;
+                end
+            endcase
+        end
     end
 
     // Output assignments
-    always_comb begin
-        for (int k = 0; k < NUM_BINS; k++) begin
-            A_real_o[k] = A_real_q[k];
-            A_imag_o[k] = A_imag_q[k];
-        end
-    end
-    
-    assign valid_o = (state_q == DONE);
-    assign busy_o = (state_q == ACCUMULATE);
+    assign A_real_o = A_real_q;
+    assign A_imag_o = A_imag_q;
+    assign valid_o  = (state_q == DONE);
+    assign busy_o   = (state_q == ACCUMULATE);
 
 endmodule
