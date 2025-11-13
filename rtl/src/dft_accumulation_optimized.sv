@@ -84,6 +84,10 @@ module dft_accumulation #(
         end
     end
 
+    // Active high reset for the DSP slices
+    logic rst_p;
+    assign rst_p = ~rst_ni;
+
     // ========================================
     // Step 1: Compute x[n] * h[n] for the complex input
     // x[n] = I[n] + j*Q[n]
@@ -93,9 +97,12 @@ module dft_accumulation #(
     dsp48_mult #(
         .A_WIDTH(IQ_WIDTH),
         .B_WIDTH(WINDOW_WIDTH),
-        .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
+        // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
+        .LATENCY(1)
     ) i_weighted_mult (
         .clk(clk_i),
+        .rst(rst_p),
+        .ce(sample_valid_i),
         .a(i_sample_i),
         .b(window_coeff_i),
         .p(x_weighted_real)
@@ -104,9 +111,12 @@ module dft_accumulation #(
     dsp48_mult #(
         .A_WIDTH(IQ_WIDTH),
         .B_WIDTH(WINDOW_WIDTH),
-        .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
+        // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
+        .LATENCY(1)
     ) q_weighted_mult (
         .clk(clk_i),
+        .rst(rst_p),
+        .ce(sample_valid_i),
         .a(q_sample_i),
         .b(window_coeff_i),
         .p(x_weighted_imag)
@@ -129,9 +139,12 @@ module dft_accumulation #(
             dsp48_mult #(
                 .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
                 .B_WIDTH(OSC_WIDTH),
-                .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                .LATENCY(1)
             ) xr_wr_mult (
                 .clk(clk_i),
+                .rst(rst_p),
+                .ce(sample_valid_i), // TODO: maybe connect to something different
                 .a(x_weighted_real),
                 .b(W_real_i[k]),  // Direct input from APU
                 .p(xr_wr)
@@ -142,9 +155,12 @@ module dft_accumulation #(
             dsp48_mult #(
                 .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
                 .B_WIDTH(OSC_WIDTH),
-                .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                .LATENCY(1)
             ) xi_wi_mult (
                 .clk(clk_i),
+                .ce(sample_valid_i), // TODO: maybe connect to something different
+                .a(x_weighted_real),
                 .a(x_weighted_imag),
                 .b(W_imag_i[k]),  // Direct input from APU
                 .p(xi_wi)
@@ -155,9 +171,12 @@ module dft_accumulation #(
             dsp48_mult #(
                 .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
                 .B_WIDTH(OSC_WIDTH),
-                .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                .LATENCY(1)
             ) xr_wi_mult (
                 .clk(clk_i),
+                .ce(sample_valid_i), // TODO: maybe connect to something different
+                .a(x_weighted_real),
                 .a(x_weighted_real),
                 .b(W_imag_i[k]),  // Direct input from APU
                 .p(xr_wi)
@@ -168,10 +187,13 @@ module dft_accumulation #(
             dsp48_mult #(
                 .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
                 .B_WIDTH(OSC_WIDTH),
-                .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
+                .LATENCY(1)
             ) xi_wr_mult (
                 .clk(clk_i),
                 .a(x_weighted_imag),
+                .ce(sample_valid_i), // TODO: maybe connect to something different
+                .a(x_weighted_real),
                 .b(W_real_i[k]),  // Direct input from APU
                 .p(xi_wr)
             );

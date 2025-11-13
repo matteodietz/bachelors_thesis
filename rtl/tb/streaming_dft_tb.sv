@@ -1,5 +1,3 @@
-// TODO: fix dsp48 instantiation
-
 module dft_accumulation_tb ();
 
     timeunit 1ns;
