@@ -1,4 +1,4 @@
-// TODO: Fix the module instantiation, no width_p but latency!!!
+// TODO: Fix dsp48 instantiation, no width_p but latency!!!
 
 module dft_accumulation #(
     parameter integer IQ_WIDTH = 16,           // Width of I and Q samples

@@ -1,6 +1,9 @@
-`timescale 1ns / 1ps
+// TODO: fix dsp48 instantiation
 
 module dft_accumulation_tb ();
+
+    timeunit 1ns;
+    timeprecision 1ps;
 
     // --- Parameters (MUST match DUT and Python generator) ---
     localparam time CLK_PERIOD = 10ns;
