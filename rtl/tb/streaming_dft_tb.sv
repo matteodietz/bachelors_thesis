@@ -114,8 +114,8 @@ module dft_accumulation_tb ();
 
         $display("=== Starting DFT Accumulation Testbench ===");
         
-        // Skip header lines (count them in your actual file)
-        for (int i = 0; i < 18; i++) begin
+        // Skip header lines
+        for (int i = 0; i < 20; i++) begin
             status = $fgets(line, file);
         end
 

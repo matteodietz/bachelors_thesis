@@ -1,3 +1,8 @@
+// PROBLEMS:
+// act_valid never turns 1
+// in tb: exp_A_real and exp_A_imag don't get read in correctly.
+
+
 module dft_accumulation #(
     parameter integer IQ_WIDTH = 16,
     parameter integer WINDOW_WIDTH = 16,
@@ -57,7 +62,6 @@ module dft_accumulation #(
     // =======================================================
 
     // --- Pipeline Stage 0: Register all inputs ---
-    // This provides a clean starting point for the pipeline.
     always_ff @(posedge clk_i) begin
         if (sample_valid_i) begin
             i_sample_p0      <= i_sample_i;
