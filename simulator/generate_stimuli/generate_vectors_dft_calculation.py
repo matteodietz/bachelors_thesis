@@ -68,7 +68,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Convert to fixed point
     # I/Q samples: Use Q(iq_width-8).8 format (8 fractional bits)
-    iq_frac_bits = 16
+    iq_frac_bits = 14
     iq_int_bits = iq_width - iq_frac_bits
     
     i_samples_hw = [float_to_fixed_point(np.real(s), iq_int_bits, iq_frac_bits, signed=True) 
@@ -78,7 +78,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Window coefficients: Use Q(window_width-16).16 format (16 fractional bits)
     # Window values are between 0 and 1
-    window_frac_bits = 16
+    window_frac_bits = 14
     window_int_bits = window_width - window_frac_bits
     
     window_coeffs_hw = [float_to_fixed_point(w, window_int_bits, window_frac_bits, signed=True) 
@@ -86,7 +86,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Oscillator values W: Use Q(osc_width-16).16 format (16 fractional bits)
     # W values are complex with magnitude ~1
-    osc_frac_bits = 16
+    osc_frac_bits = 24
     osc_int_bits = osc_width - osc_frac_bits
     
     W_real_hw = np.zeros((N, K), dtype=int)
@@ -101,7 +101,7 @@ def generate_test_case(test_name, iq_data, fs, freq_bins, window_type,
     
     # Expected accumulator outputs: Use Q(accum_width-8).8 format (8 fractional bits)
     # Note: The accumulators grow large, so we need more integer bits
-    accum_frac_bits = 36
+    accum_frac_bits = 40
     accum_int_bits = accum_width - accum_frac_bits
     
     # Scale expected outputs to match hardware scaling
@@ -222,11 +222,11 @@ def main():
     print("=== Generating Simulation Vectors for dft_accumulation.sv ===\n")
     
     # Hardware parameters
-    IQ_WIDTH = 24
-    WINDOW_WIDTH = 24
-    ACCUM_WIDTH = 48  # Needs to be large to avoid overflow
-    OSC_WIDTH = 18
-    NUM_BINS = 24  # Maximum
+    IQ_WIDTH = 16           # Q2.14
+    WINDOW_WIDTH = 16       # Q2.14
+    ACCUM_WIDTH = 48        # Q8.40 Needs to be large to avoid overflow
+    OSC_WIDTH = 27          # Q3.24
+    NUM_BINS = 24           # Maximum
     
     test_cases = []
     
