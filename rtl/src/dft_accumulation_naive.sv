@@ -1,4 +1,4 @@
-module dft_accumulation #(
+module dft_accumulation_naive #(
     parameter integer IQ_WIDTH = 16,           // Width of I and Q samples
     parameter integer WINDOW_WIDTH = 18,       // Width of window coefficients
     parameter integer ACCUM_WIDTH = 48,        // Width of accumulators (complex real/imag)

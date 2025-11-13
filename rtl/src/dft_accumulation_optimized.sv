@@ -1,6 +1,4 @@
-// TODO: Fix dsp48 instantiation, no width_p but latency!!!
-
-module dft_accumulation #(
+module dft_accumulation_optimized #(
     parameter integer IQ_WIDTH = 16,           // Width of I and Q samples
     parameter integer WINDOW_WIDTH = 16,       // Width of window coefficients
     parameter integer ACCUM_WIDTH = 48,        // Width of accumulators (complex real/imag)
@@ -95,8 +93,8 @@ module dft_accumulation #(
     //            = I[n]*h[n] + j*Q[n]*h[n]
     // ========================================
     dsp48_mult #(
-        .A_WIDTH(IQ_WIDTH),
-        .B_WIDTH(WINDOW_WIDTH),
+        .WIDTH_A(IQ_WIDTH),
+        .WIDTH_B(WINDOW_WIDTH),
         // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
         .LATENCY(1)
     ) i_weighted_mult (
@@ -109,8 +107,8 @@ module dft_accumulation #(
     );
 
     dsp48_mult #(
-        .A_WIDTH(IQ_WIDTH),
-        .B_WIDTH(WINDOW_WIDTH),
+        .WIDTH_A(IQ_WIDTH),
+        .WIDTH_B(WINDOW_WIDTH),
         // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1)
         .LATENCY(1)
     ) q_weighted_mult (
@@ -137,8 +135,8 @@ module dft_accumulation #(
             // x_weighted_real * W_real
             logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xr_wr;
             dsp48_mult #(
-                .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
-                .B_WIDTH(OSC_WIDTH),
+                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
+                .WIDTH_B(OSC_WIDTH),
                 // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
                 .LATENCY(1)
             ) xr_wr_mult (
@@ -153,14 +151,14 @@ module dft_accumulation #(
             // x_weighted_imag * W_imag
             logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xi_wi;
             dsp48_mult #(
-                .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
-                .B_WIDTH(OSC_WIDTH),
+                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
+                .WIDTH_B(OSC_WIDTH),
                 // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
                 .LATENCY(1)
             ) xi_wi_mult (
                 .clk(clk_i),
+                .rst(rst_p),
                 .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_real),
                 .a(x_weighted_imag),
                 .b(W_imag_i[k]),  // Direct input from APU
                 .p(xi_wi)
@@ -169,14 +167,14 @@ module dft_accumulation #(
             // x_weighted_real * W_imag
             logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xr_wi;
             dsp48_mult #(
-                .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
-                .B_WIDTH(OSC_WIDTH),
+                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
+                .WIDTH_B(OSC_WIDTH),
                 // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
                 .LATENCY(1)
             ) xr_wi_mult (
                 .clk(clk_i),
+                .rst(rst_p),
                 .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_real),
                 .a(x_weighted_real),
                 .b(W_imag_i[k]),  // Direct input from APU
                 .p(xr_wi)
@@ -185,15 +183,15 @@ module dft_accumulation #(
             // x_weighted_imag * W_real
             logic signed [IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+1:0] xi_wr;
             dsp48_mult #(
-                .A_WIDTH(IQ_WIDTH+WINDOW_WIDTH+1),
-                .B_WIDTH(OSC_WIDTH),
+                .WIDTH_A(IQ_WIDTH+WINDOW_WIDTH+1),
+                .WIDTH_B(OSC_WIDTH),
                 // .P_WIDTH(IQ_WIDTH+WINDOW_WIDTH+OSC_WIDTH+2)
                 .LATENCY(1)
             ) xi_wr_mult (
                 .clk(clk_i),
+                .rst(rst_p),
                 .a(x_weighted_imag),
                 .ce(sample_valid_i), // TODO: maybe connect to something different
-                .a(x_weighted_real),
                 .b(W_real_i[k]),  // Direct input from APU
                 .p(xi_wr)
             );
