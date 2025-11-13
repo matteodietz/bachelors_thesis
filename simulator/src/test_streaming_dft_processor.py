@@ -2,8 +2,6 @@ import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
 
-# It's good practice to have the function-to-be-tested in a separate file,
-# but for this simple test, we can include it here.
 # --- Function to be tested ---
 def streaming_dft_processor(b, fs, freq_bins_to_calc, window='hann'):
     """
@@ -32,7 +30,7 @@ def streaming_dft_processor(b, fs, freq_bins_to_calc, window='hann'):
 if __name__ == '__main__':
     print("--- Verifying correctness of the streaming_dft_processor ---")
 
-    # --- 1. Generate a simple test signal ---
+    # --- simple test signal ---
     N = 256
     fs = 31.25e6
     t = np.arange(N) / fs
@@ -44,7 +42,7 @@ if __name__ == '__main__':
     window_func = 'hann'
     windowed_signal = test_signal * signal.windows.get_window(window_func, N)
 
-    # --- 2. Calculate DFT using the Streaming Processor (Method 1) ---
+    # --- Calculate DFT using the Streaming Processor (Method 1) ---
     # Generate the frequency bins in the standard "wrapped" FFT order
     all_freq_bins_wrapped = np.fft.fftfreq(N, 1/fs)
     
@@ -56,17 +54,14 @@ if __name__ == '__main__':
         window=window_func
     )
     
-    # --- THIS IS THE ONE-LINE FIX ---
-    # Reconstruct the output array in the correct "wrapped" order by looking up
-    # the values from the dictionary using the original frequency bin array.
+    # --- Reordering ---
     streaming_dft_result_wrapped = np.array([streaming_dft_result_dict[f] for f in all_freq_bins_wrapped])
-    # --- END OF FIX ---
 
-    # --- 3. Calculate DFT using the Standard FFT (Golden Reference) ---
+    # --- Calculate DFT using the Standard FFT (Golden Reference) ---
     print("Running standard FFT for comparison...")
     standard_fft_result_wrapped = np.fft.fft(windowed_signal)
     
-    # --- 4. Compare the Results (using the wrapped arrays) ---
+    # --- Compare the Results (using the wrapped arrays) ---
     error = np.abs(streaming_dft_result_wrapped - standard_fft_result_wrapped)
     
     print("\n--- Verification Results ---")
@@ -77,7 +72,7 @@ if __name__ == '__main__':
     np.testing.assert_allclose(streaming_dft_result_wrapped, standard_fft_result_wrapped, atol=1e-9, rtol=0)
     print("\nSUCCESS: Streaming DFT is bit-accurate with standard FFT.")
 
-    # --- 5. Visual Confirmation Plot ---
+    # --- Visual Confirmation Plot ---
     # Now we shift BOTH results for plotting
     freq_axis_shifted = np.fft.fftshift(all_freq_bins_wrapped)
     streaming_dft_shifted = np.fft.fftshift(streaming_dft_result_wrapped)

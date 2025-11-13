@@ -53,9 +53,9 @@ if __name__ == '__main__':
     channel_to_inspect = 64
     
     # generated A-line (at high sample rate)
-    your_iq_aline = high_rate_iq_generated[:, channel_to_inspect]
-    your_time_axis = np.arange(len(your_iq_aline)) / adc_rate * 1e6 # Time in us
-    your_envelope = np.abs(your_iq_aline)
+    my_iq_aline = high_rate_iq_generated[:, channel_to_inspect]
+    my_time_axis = np.arange(len(my_iq_aline)) / adc_rate * 1e6 # Time in us
+    my_envelope = np.abs(my_iq_aline)
 
     # Ground truth A-line (at low sample rate)
     gt_iq_aline = picmus_iq_data[center_angle_index_iq, channel_to_inspect, :]
@@ -64,16 +64,16 @@ if __name__ == '__main__':
 
     # --- 5. Plot Figure 1: Generated Data ---
     plt.figure(figsize=(14, 7))
-    plt.plot(your_time_axis, your_iq_aline.real, 'b-', linewidth=0.5, label='Generated I Component')
-    plt.plot(your_time_axis, your_iq_aline.imag, 'r-', linewidth=0.5, label='Generated Q Component')
-    plt.plot(your_time_axis, your_envelope, 'k-', linewidth=1.5, label='Generated Envelope')
+    plt.plot(my_time_axis, my_iq_aline.real, 'b-', linewidth=0.5, label='Generated I Component')
+    plt.plot(my_time_axis, my_iq_aline.imag, 'r-', linewidth=0.5, label='Generated Q Component')
+    plt.plot(my_time_axis, my_envelope, 'k-', linewidth=1.5, label='Generated Envelope')
     
-    plt.title(f'YOUR Generated I/Q Data (Channel {channel_to_inspect}, fs={adc_rate/1e6:.2f} MHz)')
+    plt.title(f'my Generated I/Q Data (Channel {channel_to_inspect}, fs={adc_rate/1e6:.2f} MHz)')
     plt.xlabel('Time (µs)')
     plt.ylabel('Amplitude')
     plt.legend()
     plt.grid(True)
-    plt.suptitle("Figure 1: Your Generated Data", fontsize=16)
+    plt.suptitle("Figure 1: my Generated Data", fontsize=16)
 
     # --- 6. Plot Figure 2: Ground Truth Data ---
     plt.figure(figsize=(14, 7))
