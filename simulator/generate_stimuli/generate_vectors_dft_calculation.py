@@ -229,6 +229,38 @@ def main():
     NUM_BINS = 24           # Maximum
     
     test_cases = []
+
+    # ====================================================================
+    # --- NEW: Sanity Check Test Case (8-point DFT) ---
+    # ====================================================================
+    print("\n========== Sanity Check Test Case ==========")
+    
+    fs_sanity = 8.0 # Use a simple sample rate, e.g., 8 Hz
+    nperseg_sanity = 8
+    
+    # A simple real-valued cosine wave at 1 Hz. 
+    # Its spectrum should have two peaks at +1 Hz and -1 Hz.
+    t_sanity = np.arange(nperseg_sanity) / fs_sanity
+    signal_sanity = np.cos(2 * np.pi * 1.0 * t_sanity)
+    
+    # For this test, we will calculate ALL 8 frequency bins
+    S_bins_sanity = np.fft.fftfreq(nperseg_sanity, 1/fs_sanity)
+    
+    print("\n--- Test Case: 8-point DFT of a 1 Hz Cosine ---")
+    tc_sanity = generate_test_case(
+        "sanity_check_8pt_dft",
+        signal_sanity,
+        fs_sanity,
+        S_bins_sanity,
+        'rect', # Use a rectangular window (all 1s) for simplicity
+        IQ_WIDTH,
+        WINDOW_WIDTH,
+        ACCUM_WIDTH,
+        OSC_WIDTH,
+        8 # Actual number of bins for this test
+    )
+    test_cases.append(tc_sanity)
+    # ====================================================================
     
     # ===== Test Cases from PICMUS Data =====
     if PICMUS_AVAILABLE:
