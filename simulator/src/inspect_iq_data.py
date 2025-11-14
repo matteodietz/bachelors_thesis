@@ -130,20 +130,19 @@ if __name__ == '__main__':
     print(f"  - Average Max Error as % of Dynamic Range: {np.mean(all_norm_errors_imag):.2f}%")
     print(f"  - Average Mean Error as % of Dynamic Range: {np.mean(all_norm_avg_errors_imag):.2f}%")
     
-   # --- 6. Plotting (with subplots for direct comparison) ---
+   # --- 6. plotting (with subplots for direct comparison) ---
     my_envelope_plot = np.abs(my_iq_aline_plot)
     gt_envelope_plot = np.abs(gt_iq_aline_plot)
 
-    # Create a single figure with two subplots stacked vertically
-    # `sharex=True` links the x-axes so zooming in one zooms the other.
+    # create a single figure with two subplots stacked vertically
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
     
-    # --- Top Subplot (ax1): Ground Truth Data ---
+    # --- top subplot (ax1): ground truth data ---
     ax1.plot(gt_time_axis_plot * 1e6, gt_iq_aline_plot.real, 'b-', linewidth=0.5, label='PICMUS I Component')
     ax1.plot(gt_time_axis_plot * 1e6, gt_iq_aline_plot.imag, 'r-', linewidth=0.5, label='PICMUS Q Component')
     ax1.plot(gt_time_axis_plot * 1e6, gt_envelope_plot, 'k-', linewidth=1.5, label='PICMUS Envelope')
 
-    # Get the time value where the trimming starts and add the vertical line
+    # get the time value where the trimming starts and add the vertical line
     trim_time_us = (gt_time_axis_plot[-num_points_to_trim]) * 1e6
     ax1.axvline(x=trim_time_us, color='m', linestyle='--', linewidth=2, label=f'Error Trim Point')
     
@@ -152,12 +151,12 @@ if __name__ == '__main__':
     ax1.legend()
     ax1.grid(True)
 
-    # --- Bottom Subplot (ax2): Your Generated Data ---
+    # --- bottom subplot (ax2): generated data by virtual AFE ---
     ax2.plot(my_time_axis_plot * 1e6, my_iq_aline_plot.real, 'b-', linewidth=0.5, label='Generated I Component')
     ax2.plot(my_time_axis_plot * 1e6, my_iq_aline_plot.imag, 'r-', linewidth=0.5, label='Generated Q Component')
     ax2.plot(my_time_axis_plot * 1e6, my_envelope_plot, 'k-', linewidth=1.5, label='Generated Envelope')
 
-    # Get the time value where the trimming starts and add the vertical line
+    # get the time value where the trimming starts and add the vertical line
     trim_time_us = (gt_time_axis_plot[-num_points_to_trim]) * 1e6
     ax2.axvline(x=trim_time_us, color='m', linestyle='--', linewidth=2, label=f'Error Trim Point')
     
@@ -167,21 +166,21 @@ if __name__ == '__main__':
     ax2.legend()
     ax2.grid(True)
 
-    # --- Overall figure title and saving ---
+    # --- overall figure title and saving ---
     fig.suptitle('Comparison of Generated vs. Ground Truth I/Q Data (Fixed Test Case)', fontsize=16)
-    # Adjust layout to prevent titles from overlapping
+    # adjust layout to prevent titles from overlapping
     fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-    # Define the output path and create the directory if it doesn't exist
+    # define output path and create the directory if it doesn't exist
     plots_dir = Path(__file__).resolve().parent / "plots"
     plots_dir.mkdir(parents=True, exist_ok=True)
     file_name = "virtual_afe_gt_comparison.png"
     output_path = plots_dir / file_name
 
-    # Save the figure to the specified path
+    # save the figure to the specified path
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     
     print(f"\nSUCCESS: Comparison plot saved to {output_path}")
     
-    # Close the plot to prevent it from showing interactively
+    # close plot
     plt.close()
