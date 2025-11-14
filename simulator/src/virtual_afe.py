@@ -30,7 +30,7 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
             - high_rate_iq (np.ndarray): The intermediate high-rate I/Q data (before decimation).
             - fs_new (float): The sample rate of the decimated_iq data.
     """
-    print(f"--- Running Virtual AFE Processing for M={decimation_factor} ---")
+    # print(f"--- Running Virtual AFE Processing for M={decimation_factor} ---")
     
     # upsample RF data for the chosen angle
     data_for_one_angle_rf = rf_data[angle_index, :, :].T
@@ -39,11 +39,11 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     upsample_factor_den = int(fs_picmus)
     
     high_rate_rf = signal.resample_poly(data_for_one_angle_rf, up=upsample_factor_num, down=upsample_factor_den, axis=0)
-    print(f"Upsampled RF data to shape: {high_rate_rf.shape}")
+    # print(f"Upsampled RF data to shape: {high_rate_rf.shape}")
 
     # add AWGN to the high-rate RF signal
     if snr_db is not None:
-        print(f"Adding AWGN to achieve an SNR of {snr_db} dB...")
+        # print(f"Adding AWGN to achieve an SNR of {snr_db} dB...")
         # calculate the power of the signal
         signal_power = np.var(high_rate_rf)
         
@@ -57,17 +57,17 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
         
         # add the noise to the signal
         high_rate_rf = high_rate_rf + noise
-        print("Noise addition complete.")
+        # print("Noise addition complete.")
 
     # --- MATHEMATICALLY IDEAL BPF ---
-    print("Applying ideal FFT-based band-pass filter to RF signal...")
+    # print("Applying ideal FFT-based band-pass filter to RF signal...")
     
     # define the passband based on transducer specs
     center_freq = modulation_frequency
     bandwidth = center_freq * (87 / 100.0)
     low_cutoff = center_freq - (bandwidth / 2)
     high_cutoff = center_freq + (bandwidth / 2)
-    print(f"Ideal BPF Passband: [{low_cutoff/1e6:.2f}, {high_cutoff/1e6:.2f}] MHz")
+    # print(f"Ideal BPF Passband: [{low_cutoff/1e6:.2f}, {high_cutoff/1e6:.2f}] MHz")
     
     # go to the frequency domain
     spectrum_rf = np.fft.fft(high_rate_rf, axis=0)
@@ -82,7 +82,7 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     
     # go back to time domain
     filtered_high_rate_rf = np.fft.ifft(filtered_spectrum_rf, axis=0).real # Use .real to discard tiny imaginary parts due to numerical precision
-    print("Band-pass filtering complete.")
+    # print("Band-pass filtering complete.")
     # --- END OF MATHEMATICALLY IDEAL BPF ---
 
     # --- REALISTIC BPF ---
@@ -105,7 +105,7 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     
     # I/Q Demodulation 
     # time vector for the high-rate RF signal
-    print(f"Performing I/Q Demodulation...")
+    # print(f"Performing I/Q Demodulation...")
     num_samples_high_rate = filtered_high_rate_rf.shape[0]
     t = np.arange(num_samples_high_rate) / adc_sample_rate
     
@@ -127,13 +127,13 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     # print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
 
     # --- MATHEMATICALLY IDEAL LPF ---
-    print("Applying ideal FFT-based low-pass filter...")
+    # print("Applying ideal FFT-based low-pass filter...")
     
     # go to the frequency domain
     spectrum = np.fft.fft(analytic_signal_passband, axis=0)
     # absolute cutoff frequency in Hz
     abs_cutoff_hz = (modulation_frequency * (91 / 100.0)) / 2.0
-    print(f"Ideal LPF cutoff frequency: {abs_cutoff_hz / 1e6:.2f} MHz")
+    # print(f"Ideal LPF cutoff frequency: {abs_cutoff_hz / 1e6:.2f} MHz")
     # create the frequency bins vector for this FFT
     freqs = np.fft.fftfreq(num_samples_high_rate, 1/adc_sample_rate)
     # filter is 1 inside the passband and 0 outside
@@ -143,7 +143,7 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
     filtered_spectrum = spectrum * mask[:, np.newaxis]
     # go back to the time domain
     high_rate_iq = np.fft.ifft(filtered_spectrum, axis=0)
-    print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
+    # print(f"I/Q Demodulation complete. High-rate IQ shape: {high_rate_iq.shape}")
     
     # --- END OF MATHEMATICALLY IDEAL LPF ---
 
@@ -169,7 +169,7 @@ def run_virtual_afe_processing(rf_data, angle_index, fs_picmus, modulation_frequ
 
 # --- UNIT TEST ---
 if __name__ == '__main__':
-    print("--- Running unit test for virtual_afe.py (RF input) ---")
+    # print("--- Running unit test for virtual_afe.py (RF input) ---")
 
     # define paths and parameters
     try:
